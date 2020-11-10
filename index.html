@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas</title>
+
+    <style>
+      .canvas-wrapper {
+        margin: 0 auto;
+        width: 1000px;
+        height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-wrapper" width="1000" height="500">
+      <canvas id="myCanvas">
+        Your browser does not support the canvas element.
+      </canvas>
+    </div>
+    <script>
+        // 开盘 收盘 最低 最高
+        var data = [
+          [600, 570, 570, 650],
+          [550, 500, 450, 600],
+          [510, 512, 480, 550],
+          [512, 470, 400, 514],
+          [460, 400, 370, 570],
+          [400, 360, 400, 360],
+          [360, 200, 180, 360],
+          [200, 210, 180, 220],
+          [206, 150, 210, 130],
+          [150, 154, 156, 146],
+          [154, 156, 156, 146],
+          [156, 150, 156, 140],
+          [150, 146, 130, 150],
+          [146, 126, 90, 148],
+          [120, 150, 120, 170],
+          [150, 200, 150, 200],
+          [200, 300, 200, 300],
+          [300, 380, 270, 420],
+          [330, 360, 270, 420],
+          [360, 320, 270, 430],
+          [320, 280, 270, 380],
+          [280, 450, 270, 470],
+          [450, 560, 390, 600],
+          [570, 700, 560, 720],
+          [680, 750, 570, 750],
+          [750, 690, 570, 750],
+          [690, 550, 500, 720],
+          [500, 720, 748, 500],
+          [730, 670, 750, 600]
+      ];
+      var curveData = [
+        [40, 570],
+        [90, 500],
+        [140, 512],
+        [190, 470],
+        [240, 400],
+        [290, 360],
+        [340, 200],
+        [390, 210],
+        [440, 150],
+        [490, 154],
+        [540, 156],
+        [590, 150],
+        [640, 146],
+        [690, 126],
+        [740, 150],
+        [790, 200],
+        [840, 300],
+        [890, 380],
+        [940, 360],
+        [990, 320],
+        [1040, 280],
+        [1090, 450],
+        [1140, 560],
+        [1190, 700],
+        [1240, 750],
+        [1290, 690],
+        [1340, 550],
+        [1390, 720],
+        [1440, 670],
+      ];
+      var $box = document.getElementById("myCanvas");
+      var $wrapper = document.getElementById("canvas-wrapper");
+      var ctx = $box.getContext("2d");
+      var cWidth,
+        cHeight,
+        cPadding,
+        ctWidth,
+        originX,
+        originY,
+        kWidth = 20,
+        kSpace = 30; // canvas 宽高、坐标0点
+      window.onload = function () {
+        initChart();
+      };
+
+      function initChart() {
+        cPadding = 60;
+        ctWidth = 80;
+        $box.width = $wrapper.getAttribute("width") * 2;
+        $box.height = $wrapper.getAttribute("height") * 2;
+        $box.style.width = $box.width / 2 + "px";
+        $box.style.height = $box.height / 2 + "px";
+        cHeight = $box.height - cPadding * 2 - ctWidth * 2;
+        cWidth = $box.width - cPadding * 2 - ctWidth * 2;
+        originX = ctWidth + cPadding;
+        originY = cPadding + cHeight;
+        // x轴
+        drawLine(originX, originY, originX + cWidth, originY);
+        // y轴
+        drawLine(originX, originY, originX, originY - cHeight);
+        // 辅助线
+        drawSubline()
+        // k线
+        drawKLine();
+        // 曲线
+        drawCurve();
+        // 坐标
+        drawText();
+      }
+      // 辅助线
+      function drawSubline() {
+        const yCountArr = [0, 100, 200, 300, 400, 500, 600, 700];
+        for (let i = 0; i < yCountArr.length; i++) {
+          drawDashLine(originX, yCountArr[i] - 40, cWidth + originX, yCountArr[i] - 40)
+        }
+      };
+  
+      function drawText() {
+        const xDateArr = [
+          "2020-02-01",
+          "2020-03-01",
+          "2020-04-01",
+          "2020-05-01",
+          "2020-06-01",
+          "2020-07-01",
+        ];
+        const yCountArr = [0, 100, 200, 300, 400, 500, 600, 700];
+        ctx.beginPath();
+        ctx.font = "24px bold 黑体";
+        ctx.fillStyle = "#000";
+        ctx.textAlign = "left";
+        for (let i = 0; i < xDateArr.length; i++) {
+          ctx.fillText(xDateArr[i], originX + i * 300, originY + 40);
+        }
+        ctx.textAlign = "center";
+        for (let i = 0; i < yCountArr.length; i++) {
+          ctx.fillText(yCountArr[i], originX - 30, originY - i * 100);
+        }
+        ctx.closePath();
+      }
+
+      // 画线的方法
+      function drawLine(x, y, X, Y) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(X, Y);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      // 画虚线线的方法
+      function drawDashLine(x, y, X, Y) {
+         ctx.beginPath();
+      　　ctx.setLineDash([5]);
+         ctx.moveTo(x, y);
+      　　ctx.lineTo(X, Y);
+      　　ctx.stroke();
+         ctx.setLineDash([])
+         ctx.closePath();
+      };
+
+      // k线
+      function drawKLine() {
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i];
+          const flag = item[0] > item[1];
+          ctx.beginPath();
+          // 线
+          ctx.moveTo(
+            (i + 1) * kSpace + i * kWidth + originX + kWidth / 2,
+            originY - item[2]
+          );
+          ctx.lineTo(
+            (i + 1) * kSpace + i * kWidth + originX + kWidth / 2,
+            originY - item[3]
+          );
+          // 矩形
+          ctx.moveTo(
+            (i + 1) * kSpace + i * kWidth + originX,
+            flag ? originY - item[0] : originY - item[1]
+          );
+          ctx.rect(
+            (i + 1) * kSpace + i * kWidth + originX,
+            flag ? originY - item[0] : originY - item[1],
+            kWidth,
+            Math.abs(item[0] - item[1])
+          );
+
+          ctx.strokeStyle = flag ? "green" : "red";
+          ctx.fillStyle = flag ? "green" : "#fff";
+          ctx.lineWidth = 4;
+          ctx.strokeWidht = 4;
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+      function drawCurve() {
+        let startX,
+          startY,
+          cPointX,
+          cPointY,
+          cacheCenterPoint = {};
+        if (curveData.length >= 3) {
+          for (let i = 2; i < curveData.length; i++) {
+            ctx.beginPath();
+            if (i === 2) {
+              startX = originX + curveData[i - 2][0];
+              startY = originY - curveData[i - 2][1];
+            } else {
+              startX = cacheCenterPoint.cPointX;
+              startY = cacheCenterPoint.cPointY;
+            }
+            cPointX = originX + (i === curveData.length - 1 ? curveData[i][0] : (curveData[i][0] + curveData[i - 1][0]) / 2);
+            cPointY = originY - (i === curveData.length - 1 ? curveData[i][1] : (curveData[i][1] + curveData[i - 1][1]) / 2);
+            cacheCenterPoint = { cPointX, cPointY };
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(
+              originX + curveData[i - 1][0],
+              originY - curveData[i - 1][1],
+              cPointX,
+              cPointY
+            );
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "green";
+            ctx.stroke();
+            ctx.closePath();
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
