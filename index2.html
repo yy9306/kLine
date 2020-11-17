@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蜡烛图</title>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    #canvas-wrapper {
+      position: relative;
+      margin: 0 auto;
+      width: 1000px;
+      height: 500px;
+    }
+    #subCanvas{
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-wrapper" width="900" height="500">
+    <canvas id="myCanvas">
+      Your browser does not support the canvas element.
+    </canvas>
+    <canvas id="subCanvas">
+      Your browser does not support the canvas element.
+    </canvas>
+  </div>
+
+  <script>
+    const sourceData = [
+      { openPrice: 600, endPrice: 570, minPrice: 570, highPrice: 650, date: '2020-10-1' },
+      { openPrice: 550, endPrice: 500, minPrice: 450, highPrice: 600, date: '2020-10-2' },
+      { openPrice: 510, endPrice: 512, minPrice: 480, highPrice: 550, date: '2020-10-3' },
+      { openPrice: 512, endPrice: 470, minPrice: 400, highPrice: 514, date: '2020-10-4' },
+      { openPrice: 460, endPrice: 400, minPrice: 370, highPrice: 570, date: '2020-10-5' },
+      { openPrice: 400, endPrice: 360, minPrice: 400, highPrice: 360, date: '2020-10-6' },
+      { openPrice: 360, endPrice: 200, minPrice: 180, highPrice: 360, date: '2020-10-7' },
+      { openPrice: 200, endPrice: 210, minPrice: 180, highPrice: 220, date: '2020-10-8' },
+      { openPrice: 206, endPrice: 150, minPrice: 210, highPrice: 130, date: '2020-10-9' },
+      { openPrice: 150, endPrice: 154, minPrice: 156, highPrice: 146, date: '2020-10-10' },
+      { openPrice: 154, endPrice: 156, minPrice: 156, highPrice: 146, date: '2020-10-11' },
+      { openPrice: 156, endPrice: 150, minPrice: 156, highPrice: 140, date: '2020-10-12' },
+      { openPrice: 150, endPrice: 146, minPrice: 130, highPrice: 150, date: '2020-10-13' },
+      { openPrice: 146, endPrice: 126, minPrice: 90, highPrice: 148, date: '2020-10-14' },
+      { openPrice: 120, endPrice: 150, minPrice: 120, highPrice: 170, date: '2020-10-15' },
+      { openPrice: 150, endPrice: 200, minPrice: 150, highPrice: 200, date: '2020-10-16' },
+      { openPrice: 200, endPrice: 300, minPrice: 200, highPrice: 300, date: '2020-10-17' },
+      { openPrice: 300, endPrice: 380, minPrice: 270, highPrice: 420, date: '2020-10-18' },
+      { openPrice: 330, endPrice: 360, minPrice: 270, highPrice: 420, date: '2020-10-19' },
+      { openPrice: 360, endPrice: 320, minPrice: 270, highPrice: 430, date: '2020-10-20' },
+      { openPrice: 320, endPrice: 450, minPrice: 270, highPrice: 380, date: '2020-10-21' },
+      { openPrice: 280, endPrice: 450, minPrice: 270, highPrice: 470, date: '2020-10-22' },
+      { openPrice: 450, endPrice: 560, minPrice: 390, highPrice: 600, date: '2020-10-23' },
+      { openPrice: 570, endPrice: 700, minPrice: 560, highPrice: 710, date: '2020-10-24' },
+      { openPrice: 680, endPrice: 640, minPrice: 690, highPrice: 640, date: '2020-10-25' },
+      { openPrice: 640, endPrice: 690, minPrice: 630, highPrice: 690, date: '2020-10-26' },
+      { openPrice: 690, endPrice: 550, minPrice: 500, highPrice: 700, date: '2020-10-27' },
+      { openPrice: 550, endPrice: 500, minPrice: 580, highPrice: 470, date: '2020-10-28' },
+      { openPrice: 510, endPrice: 470, minPrice: 430, highPrice: 520, date: '2020-10-29' }
+    ]
+
+    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 450, 560, 700, 640, 690, 550, 500, 470];
+
+    const $box = document.getElementById("myCanvas");
+    const $subBox = document.getElementById("subCanvas");
+    const $wrapper = document.getElementById("canvas-wrapper");
+    const ctx = $box.getContext("2d");
+    const ctx1 = $subBox.getContext("2d");
+    var cWidth,
+      cHeight,
+      cPadding,
+      ctWidth,
+      originX,
+      originY,
+      kWidth = 20,
+      kSpace = 30, // canvas 宽高、坐标0点
+      DROP_COLOR = 'green',
+      UP_COLOR = 'red',
+      FILL_COLOR = '#fff',
+      LINE_WIDTH = 4,
+      BASE_LENGTH = 8,
+      isMouseDown = false;
+  const controlPoint = [];    
+
+    window.onload = function () {
+      initChart();
+    };  
+
+    function initChart() {
+      cPadding = 60;
+      ctWidth = 80;
+      $box.width = $wrapper.getAttribute("width") * 2;
+      $box.height = $wrapper.getAttribute("height") * 2;
+      $subBox.width = $wrapper.getAttribute("width") * 2;
+      $subBox.height = $wrapper.getAttribute("height") * 2;
+      $box.style.width = $box.width / 2 + "px";
+      $box.style.height = $box.height / 2 + "px";
+      $subBox.style.width = $subBox.width / 2 + "px";
+      $subBox.style.height = $subBox.height / 2 + "px";
+      originX = ctWidth + cPadding;
+      cHeight = $box.height - originX * 2;
+      cWidth = $box.width - originX * 2;
+      originY = cPadding + cHeight;
+      // x轴
+      drawLine({ x: originX, y: originY, X: originX + cWidth, Y: originY, ctx });
+
+      // y轴
+      drawLine({ x: originX, y: originY, X: originX, Y: originY - cHeight, ctx });
+
+      // 辅助线
+      drawSubline()
+      // 刻度线
+      drawAxisText()
+
+      let i = 0;
+      // k线
+      timeout = setInterval(() => {
+        if (i >= sourceData.length - 1) {
+          clearInterval(timeout);          
+        }
+        drawKLine(i);
+        drawBezierCurveTo(i);
+        i++;
+      }, 67);
+    }
+
+    // 画线的方法
+    function drawLine(params) {
+      const { x, y, X, Y, color = '#000', ctx } = params;
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.moveTo(x, y);
+      ctx.lineTo(X, Y);
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    // 画虚线线的方法
+    function drawDashLine(x, y, X, Y) {
+      ctx.beginPath();
+      ctx.setLineDash([5]);
+      ctx.moveTo(x, y);
+      ctx.lineTo(X, Y);
+      ctx.stroke();
+      ctx.setLineDash([])
+      ctx.closePath();
+    };
+
+
+    // 辅助线
+    function drawSubline() {
+      const yCountArr = [0, 100, 200, 300, 400, 500, 600, 700];
+      for (let i = 0; i < yCountArr.length; i++) {
+        drawDashLine(originX, yCountArr[i] - 40, cWidth + originX, yCountArr[i] - 40);
+      }
+    };
+    // 刻度线
+    function drawAxisText() {
+      const tPadding = 5;
+      const yCountArr = [0, 100, 200, 300, 400, 500, 600, 700];
+      const len = sourceData.length;
+      const centerAxis = Math.floor(len / 2);
+      const xDateArr = [0, centerAxis, len - 1];
+
+      ctx.beginPath();
+      ctx.font = "24px bold 黑体";
+      ctx.fillStyle = "#000";
+      ctx.textBaseline = "top";
+      ctx.textAlign = "center";
+
+      for (let i = 0; i < xDateArr.length; i++) {
+        const number = xDateArr[i]
+        ctx.fillText(sourceData[number].date, getXDistance(number, 'plus'), originY + tPadding);
+      }
+
+      ctx.textBaseline = "bottom";
+      for (let i = 0; i < yCountArr.length; i++) {
+        ctx.fillText(yCountArr[i], originX - 30, originY - i * 100);
+      }
+
+    }
+
+    // k线
+    function drawKLine(i) {
+      const item = sourceData[i];
+      const flag = item.openPrice > item.endPrice;
+      const yDistance = flag ? transformAxis('Y', item.openPrice) : transformAxis('Y', item.endPrice);
+      ctx.beginPath();
+      // 线
+      ctx.moveTo(
+        getXDistance(i, 'plus'),
+        transformAxis('Y', item.minPrice)
+      );
+      ctx.lineTo(
+        getXDistance(i, 'plus'),
+        transformAxis('Y', item.highPrice)
+      );
+      // 矩形
+      ctx.moveTo(
+        getXDistance(i),
+        yDistance
+      );
+      ctx.rect(
+        getXDistance(i),
+        yDistance,
+        kWidth,
+        Math.abs(item.openPrice - item.endPrice)
+      );
+      ctx.strokeStyle = flag ? DROP_COLOR : UP_COLOR;
+      ctx.fillStyle = flag ? DROP_COLOR : FILL_COLOR;
+      ctx.lineWidth = LINE_WIDTH;
+      ctx.strokeWidht = LINE_WIDTH;
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // 三次贝塞尔曲线
+    function drawBezierCurveTo(i) {
+      if (controlPoint.length === 0) {
+        getControlPoint();
+      }
+      if (i === controlPoint.length - 1) {
+        return
+      }
+      // for (let i = 0, len = controlPoint.length - 1; i < len; i++) {
+        ctx.beginPath();
+        ctx.moveTo(getXDistance(i, 'plus'), transformAxis('Y', curveData[i]))
+        ctx.bezierCurveTo(controlPoint[i][1]['x'], transformAxis('Y', controlPoint[i][1]['y']), controlPoint[i + 1][0]['x'], transformAxis('Y', controlPoint[i + 1][0]['y']), getXDistance(i + 1, 'plus'), transformAxis('Y', curveData[i + 1]));     
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "green";
+        ctx.stroke();
+        ctx.closePath();
+      // }
+    }
+
+    function getControlPoint() {
+      //贝塞尔曲线的控制点
+      for (let i = 0; i < curveData.length; i++) {
+        const xDistance = getXDistance(i, 'plus');
+        let pointDistance, rate, yControlDis, xControlDis;
+        if (i === 0) {
+          pointDistance = getDistance(combinationDis(i + 1), combinationDis(i + 2));
+          rate = getRate(pointDistance);
+          yControlDis = getXYControlDis(i + 2, i + 1, rate, 'Y');
+          xControlDis = getXYControlDis(i + 2, i + 1, rate, 'X');
+        } else if (i < curveData.length - 2) {
+          pointDistance = getDistance(combinationDis(i - 1), combinationDis(i + 1));
+          rate = getRate(pointDistance);
+          yControlDis = getXYControlDis(i + 1, i - 1, rate, 'Y');
+          xControlDis = getXYControlDis(i + 1, i - 1, rate, 'X');
+        } else {
+          pointDistance = getDistance(combinationDis(i - 1), combinationDis(i - 2));
+          rate = getRate(pointDistance);
+          yControlDis = getXYControlDis(i - 2, i - 1, rate, 'Y');
+          xControlDis = getXYControlDis(i - 2, i - 1, rate, 'X');
+        }
+        let flag = (i >= curveData.length - 2) ? (curveData[i] > curveData[i - 1]) : (curveData[i + 1] > curveData[i]);
+        const getControlY = function(type) {
+          const minus = curveData[i] - yControlDis / 2;
+          const plus = curveData[i] - yControlDis / 2;
+          return flag ? minus : plus;
+        }
+        controlPoint.push(
+          [
+            {x: xDistance - xControlDis / 2, y: getControlY('prev', flag)}, 
+            {x: xDistance + xControlDis / 2, y: getControlY('next', !flag)}
+          ]);  
+      }
+    }
+
+    $subBox.onmousedown = function(event) {
+      isMouseDown = true;
+      dynamicSubLine(event);
+    }
+    $subBox.onmousemove = function(event) {
+      dynamicSubLine(event);
+    }
+    // 拖拽
+    function dynamicSubLine(event) {
+      if (isMouseDown) {
+        const y =  event.offsetY * 2;
+        const x = event.offsetX * 2;
+        clearCanvas(ctx1)
+        if (x > originX && x < originX + cWidth && y - cPadding > 0 && y - cHeight - cPadding < 0) {
+          drawLine({ x: originX, y: y, X: originX + cWidth, Y: y, ctx: ctx1, color: 'blue' });
+          drawLine({ x: x, y: originY, X: x, Y: originY - cHeight, ctx: ctx1, color: 'blue' });
+
+          drawText(ctx1, y, 'Y');
+          const remainder = Math.floor((x - originX - kSpace) / (kSpace + kWidth));
+          const prevValue = (remainder + 1) * kSpace + remainder * kWidth;
+          if (remainder >= 0 && x - originX >= prevValue && x - originX <= prevValue + kWidth) {
+            drawText(ctx1, x, 'X');
+          }
+        }
+      }
+    }
+    $subBox.onmouseup = function(event) {
+      isMouseDown = false;
+      clearCanvas(ctx1)
+    }
+
+    function clearCanvas(ctx) {
+      $subBox.width = $wrapper.getAttribute("width") * 2;
+      $subBox.height = $wrapper.getAttribute("height") * 2;
+      ctx.clearRect(0, 0, $subBox.width, $subBox.height);
+    }
+
+    // 拖拽辅助线
+    function drawText(ctx, value, type) {
+        const tPadding = 10; // 文字两边的间距
+        const lPadding = 2; // 文字上下
+        const FONTSIZE = 24;
+        const remainder = Math.floor((value - originX - kSpace) / (kSpace + kWidth));
+        const width = type === 'Y' ? getTextWidth(ctx1, originY - value) : getTextWidth(ctx1, sourceData[remainder].date); 
+        ctx.beginPath();
+        ctx.font = `${FONTSIZE}px bold 黑体`;
+        // 绘制底色
+        if ( type === 'Y') {
+          const width = ctx.measureText(originY - value).width;
+          const point1 = originX - width - tPadding * 2;
+          const point2 = value - FONTSIZE / 2 + lPadding;
+          const point3 = value + FONTSIZE / 2 + lPadding;
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "right";
+          ctx.moveTo(point1, point2);
+          ctx.lineTo(originX, point2);
+          ctx.lineTo(originX, point3);
+          ctx.lineTo(point1,  point3);
+          ctx.lineTo(point1, point2);
+        } else {
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+          const point1 = value - width / 2 - tPadding;
+          const point2 = originY + FONTSIZE + 2 * lPadding;
+          const point3 = value + width / 2 + tPadding
+          ctx.moveTo(value, originY);
+          ctx.lineTo(point1, originY);
+          ctx.lineTo(point1, point2);
+          ctx.lineTo(point3, point2);
+          ctx.lineTo(point3, originY)
+        }
+        ctx.fillStyle = '#d7d4f0';
+        ctx.fill();
+        ctx.fillStyle = "#000";
+        type === 'Y' ? ctx.fillText(originY - value, originX - tPadding, value) : ctx.fillText(sourceData[remainder].date, value, originY + lPadding);
+        ctx.closePath();
+    }
+    // canvas 获取文字宽度
+    function getTextWidth(ctx, text) {
+      return ctx.measureText(text).width;
+    }
+    // 转化x轴 y轴坐标
+    function transformAxis(type, value) {
+      return type === 'X' ? originX + value : originY - value;
+    }
+    // 坐标x轴的坐标
+    function getXDistance(index, type = '') {
+      const xDis = (index + 1) * kSpace + index * kWidth + originX;
+      return type ?  xDis + kWidth / 2 : xDis
+    }
+
+    // 计算两点之间的距离
+
+    function getDistance(point1, point2) {
+      const xDis = Math.pow((Math.abs(point2[0] - point1[0])), 2);
+      const yDis = Math.pow((Math.abs(point2[1] - point1[1])), 2);
+      let distance = Math.sqrt(xDis + yDis);
+      return distance.toFixed(2)
+    }
+
+    // 组装坐标点
+    function combinationDis(x) {
+      return [getXDistance(x, 'plus'), curveData[x]]
+    }
+
+    // 比率
+    function getRate(pointDis) {
+      return (pointDis / (BASE_LENGTH * 2)).toFixed(2)
+    }
+
+    function getXYControlDis(index1, index2, rate, axisType) {
+      return axisType === 'Y' ? (Math.abs(curveData[index1] - curveData[index2]) / rate).toFixed(2)
+      : (Math.abs(getXDistance(index1, 'plus') - getXDistance(index2, 'plus')) / rate).toFixed(2);
+    }
+  </script>
+</body>
+</html>
