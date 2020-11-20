@@ -62,10 +62,11 @@
       { openPrice: 640, endPrice: 690, minPrice: 630, highPrice: 690, date: '2020-10-26' },
       { openPrice: 690, endPrice: 550, minPrice: 500, highPrice: 700, date: '2020-10-27' },
       { openPrice: 550, endPrice: 500, minPrice: 580, highPrice: 470, date: '2020-10-28' },
-      { openPrice: 510, endPrice: 470, minPrice: 430, highPrice: 520, date: '2020-10-29' }
+      { openPrice: 510, endPrice: 470, minPrice: 430, highPrice: 520, date: '2020-10-29' },
+      { openPrice: 470, endPrice: 420, minPrice: 400, highPrice: 490, date: '2020-10-30' },
     ]
 
-    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 450, 560, 700, 640, 690, 550, 500, 470];
+    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 450, 560, 700, 640, 690, 550, 500, 470, 420];
 
     const $box = document.getElementById("myCanvas");
     const $subBox = document.getElementById("subCanvas");
@@ -84,9 +85,27 @@
       UP_COLOR = 'red',
       FILL_COLOR = '#fff',
       LINE_WIDTH = 4,
-      BASE_LENGTH = 8,
+      BASE_LENGTH = 18,
       isMouseDown = false;
-  const controlPoint = [];    
+  const controlPoint = [];  
+  const Easing = {
+    // 匀速
+    linear: function (t) {
+      return t;
+    },
+    // 匀加速
+    easeIn: function (t) {
+      return t * t;
+    },
+    // 匀减速
+    easeOut: function (t) {
+      return (2 - t) * t;
+    },
+    // 先加速后减速
+    easeBoth: function (t) {
+      return (t *= 2) < 1 ? .5 * t * t : .5 * (1 - (--t) * (t - 2));
+    }
+  }  
 
     window.onload = function () {
       initChart();
@@ -117,18 +136,26 @@
       drawSubline()
       // 刻度线
       drawAxisText()
-
-      let i = 0;
       // k线
-      timeout = setInterval(() => {
-        if (i >= sourceData.length - 1) {
-          clearInterval(timeout);          
-        }
-        drawKLine(i);
-        drawBezierCurveTo(i);
-        i++;
-      }, 67);
+      drawKLine();
+      
+      function step(duration, datas, easeIn) {
+        const startTime = Date.now();
+        let i = 0;
+        requestAnimationFrame(function change() {
+          const current = Date.now();
+          const p = Math.min(1.0, (current - startTime) / duration);
+          if (i < Math.floor(datas.length * p)) {
+            drawBezierCurveTo(i, Math.floor(datas.length * easeIn(p)));
+            i = Math.floor(datas.length * easeIn(p));
+          }
+          if (p < 1.0) requestAnimationFrame(change);
+        })
+      }
+
+      step(2000, sourceData, Easing.easeIn);
     }
+    
 
     // 画线的方法
     function drawLine(params) {
@@ -187,49 +214,51 @@
     }
 
     // k线
-    function drawKLine(i) {
-      const item = sourceData[i];
-      const flag = item.openPrice > item.endPrice;
-      const yDistance = flag ? transformAxis('Y', item.openPrice) : transformAxis('Y', item.endPrice);
-      ctx.beginPath();
-      // 线
-      ctx.moveTo(
-        getXDistance(i, 'plus'),
-        transformAxis('Y', item.minPrice)
-      );
-      ctx.lineTo(
-        getXDistance(i, 'plus'),
-        transformAxis('Y', item.highPrice)
-      );
-      // 矩形
-      ctx.moveTo(
-        getXDistance(i),
-        yDistance
-      );
-      ctx.rect(
-        getXDistance(i),
-        yDistance,
-        kWidth,
-        Math.abs(item.openPrice - item.endPrice)
-      );
-      ctx.strokeStyle = flag ? DROP_COLOR : UP_COLOR;
-      ctx.fillStyle = flag ? DROP_COLOR : FILL_COLOR;
-      ctx.lineWidth = LINE_WIDTH;
-      ctx.strokeWidht = LINE_WIDTH;
-      ctx.stroke();
-      ctx.fill();
-      ctx.closePath();
+    function drawKLine() {
+      for (let i = 0, len = sourceData.length; i < len; i++) {
+        const item = sourceData[i];
+        const flag = item.openPrice > item.endPrice;
+        const yDistance = flag ? transformAxis('Y', item.openPrice) : transformAxis('Y', item.endPrice);
+        ctx.beginPath();
+        // 线
+        ctx.moveTo(
+          getXDistance(i, 'plus'),
+          transformAxis('Y', item.minPrice)
+        );
+        ctx.lineTo(
+          getXDistance(i, 'plus'),
+          transformAxis('Y', item.highPrice)
+        );
+        // 矩形
+        ctx.moveTo(
+          getXDistance(i),
+          yDistance
+        );
+        ctx.rect(
+          getXDistance(i),
+          yDistance,
+          kWidth,
+          Math.abs(item.openPrice - item.endPrice)
+        );
+        ctx.strokeStyle = flag ? DROP_COLOR : UP_COLOR;
+        ctx.fillStyle = flag ? DROP_COLOR : FILL_COLOR;
+        ctx.lineWidth = LINE_WIDTH;
+        ctx.strokeWidht = LINE_WIDTH;
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+      } 
     }
-
     // 三次贝塞尔曲线
-    function drawBezierCurveTo(i) {
+    function drawBezierCurveTo(i, end) {
       if (controlPoint.length === 0) {
         getControlPoint();
       }
-      if (i === controlPoint.length - 1) {
+      const len = controlPoint.length - 1;
+      if (i >= len) {
         return
       }
-      // for (let i = 0, len = controlPoint.length - 1; i < len; i++) {
+      for (i; i < end; i++) {
         ctx.beginPath();
         ctx.moveTo(getXDistance(i, 'plus'), transformAxis('Y', curveData[i]))
         ctx.bezierCurveTo(controlPoint[i][1]['x'], transformAxis('Y', controlPoint[i][1]['y']), controlPoint[i + 1][0]['x'], transformAxis('Y', controlPoint[i + 1][0]['y']), getXDistance(i + 1, 'plus'), transformAxis('Y', curveData[i + 1]));     
@@ -237,41 +266,39 @@
         ctx.strokeStyle = "green";
         ctx.stroke();
         ctx.closePath();
-      // }
+      }
     }
-
     function getControlPoint() {
       //贝塞尔曲线的控制点
       for (let i = 0; i < curveData.length; i++) {
         const xDistance = getXDistance(i, 'plus');
         let pointDistance, rate, yControlDis, xControlDis;
-        if (i === 0) {
-          pointDistance = getDistance(combinationDis(i + 1), combinationDis(i + 2));
-          rate = getRate(pointDistance);
-          yControlDis = getXYControlDis(i + 2, i + 1, rate, 'Y');
-          xControlDis = getXYControlDis(i + 2, i + 1, rate, 'X');
-        } else if (i < curveData.length - 2) {
+
+        if ( i > 0 && i <=  curveData.length - 2) {
           pointDistance = getDistance(combinationDis(i - 1), combinationDis(i + 1));
           rate = getRate(pointDistance);
           yControlDis = getXYControlDis(i + 1, i - 1, rate, 'Y');
           xControlDis = getXYControlDis(i + 1, i - 1, rate, 'X');
-        } else {
-          pointDistance = getDistance(combinationDis(i - 1), combinationDis(i - 2));
-          rate = getRate(pointDistance);
-          yControlDis = getXYControlDis(i - 2, i - 1, rate, 'Y');
-          xControlDis = getXYControlDis(i - 2, i - 1, rate, 'X');
         }
-        let flag = (i >= curveData.length - 2) ? (curveData[i] > curveData[i - 1]) : (curveData[i + 1] > curveData[i]);
+        const flag = (i > 0) && (i <= curveData.length - 2) && (curveData[i] < curveData[i + 1]);
         const getControlY = function(type) {
           const minus = curveData[i] - yControlDis / 2;
-          const plus = curveData[i] - yControlDis / 2;
-          return flag ? minus : plus;
+          const plus = curveData[i] + yControlDis / 2;
+          return type ? minus : plus;
         }
-        controlPoint.push(
+        if (i === 0 || i === curveData.length - 1) {
+          controlPoint.push(
+            [
+              {x: xDistance - BASE_LENGTH, y: curveData[i]},
+              {x: xDistance + BASE_LENGTH, y: curveData[i]}
+            ]);
+        } else {
+          controlPoint.push(
           [
-            {x: xDistance - xControlDis / 2, y: getControlY('prev', flag)}, 
-            {x: xDistance + xControlDis / 2, y: getControlY('next', !flag)}
+            {x: xDistance - xControlDis / 2, y: getControlY(flag)}, 
+            {x: xDistance + xControlDis / 2, y: getControlY(!flag)}
           ]);  
+        } 
       }
     }
 
@@ -288,16 +315,15 @@
         const y =  event.offsetY * 2;
         const x = event.offsetX * 2;
         clearCanvas(ctx1)
-        if (x > originX && x < originX + cWidth && y - cPadding > 0 && y - cHeight - cPadding < 0) {
+        const maxWidth = originX + sourceData.length * (kSpace + kWidth) + kSpace / 2;
+        if (x > originX && x < maxWidth && y - cPadding > 0 && y - cHeight - cPadding < 0) {
           drawLine({ x: originX, y: y, X: originX + cWidth, Y: y, ctx: ctx1, color: 'blue' });
           drawLine({ x: x, y: originY, X: x, Y: originY - cHeight, ctx: ctx1, color: 'blue' });
 
           drawText(ctx1, y, 'Y');
-          const remainder = Math.floor((x - originX - kSpace) / (kSpace + kWidth));
-          const prevValue = (remainder + 1) * kSpace + remainder * kWidth;
-          if (remainder >= 0 && x - originX >= prevValue && x - originX <= prevValue + kWidth) {
-            drawText(ctx1, x, 'X');
-          }
+          // const remainder = Math.floor((x - originX - kSpace/2) / (kSpace + kWidth));
+          // const prevValue = (remainder + 1) * (kSpace + kWidth / 2);
+          drawText(ctx1, x, 'X')
         }
       }
     }
@@ -317,7 +343,7 @@
         const tPadding = 10; // 文字两边的间距
         const lPadding = 2; // 文字上下
         const FONTSIZE = 24;
-        const remainder = Math.floor((value - originX - kSpace) / (kSpace + kWidth));
+        const remainder = (value - originX <= kSpace / 2) ? 0 : Math.floor((value - originX - kSpace/2) / (kSpace + kWidth));
         const width = type === 'Y' ? getTextWidth(ctx1, originY - value) : getTextWidth(ctx1, sourceData[remainder].date); 
         ctx.beginPath();
         ctx.font = `${FONTSIZE}px bold 黑体`;
@@ -372,7 +398,7 @@
       const xDis = Math.pow((Math.abs(point2[0] - point1[0])), 2);
       const yDis = Math.pow((Math.abs(point2[1] - point1[1])), 2);
       let distance = Math.sqrt(xDis + yDis);
-      return distance.toFixed(2)
+      return distance
     }
 
     // 组装坐标点
@@ -382,12 +408,12 @@
 
     // 比率
     function getRate(pointDis) {
-      return (pointDis / (BASE_LENGTH * 2)).toFixed(2)
+      return (pointDis / (BASE_LENGTH * 2));
     }
 
     function getXYControlDis(index1, index2, rate, axisType) {
-      return axisType === 'Y' ? (Math.abs(curveData[index1] - curveData[index2]) / rate).toFixed(2)
-      : (Math.abs(getXDistance(index1, 'plus') - getXDistance(index2, 'plus')) / rate).toFixed(2);
+      return axisType === 'Y' ? (Math.abs(curveData[index1] - curveData[index2]) / rate)
+      : (Math.abs(getXDistance(index1, 'plus') - getXDistance(index2, 'plus')) / rate);
     }
   </script>
 </body>
