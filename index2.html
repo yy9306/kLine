@@ -55,7 +55,7 @@
       { openPrice: 330, endPrice: 360, minPrice: 270, highPrice: 420, date: '2020-10-19' },
       { openPrice: 360, endPrice: 320, minPrice: 270, highPrice: 430, date: '2020-10-20' },
       { openPrice: 320, endPrice: 450, minPrice: 270, highPrice: 380, date: '2020-10-21' },
-      { openPrice: 280, endPrice: 450, minPrice: 270, highPrice: 470, date: '2020-10-22' },
+      { openPrice: 280, endPrice: 460, minPrice: 270, highPrice: 470, date: '2020-10-22' },
       { openPrice: 450, endPrice: 560, minPrice: 390, highPrice: 600, date: '2020-10-23' },
       { openPrice: 570, endPrice: 700, minPrice: 560, highPrice: 710, date: '2020-10-24' },
       { openPrice: 680, endPrice: 640, minPrice: 690, highPrice: 640, date: '2020-10-25' },
@@ -66,7 +66,7 @@
       { openPrice: 470, endPrice: 420, minPrice: 400, highPrice: 490, date: '2020-10-30' },
     ]
 
-    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 450, 560, 700, 640, 690, 550, 500, 470, 420];
+    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 460, 560, 700, 640, 690, 550, 500, 470, 420];
 
     const $box = document.getElementById("myCanvas");
     const $subBox = document.getElementById("subCanvas");
@@ -153,9 +153,8 @@
         })
       }
 
-      step(2000, sourceData, Easing.easeIn);
+      step(7000, sourceData, Easing.easeIn);
     }
-    
 
     // 画线的方法
     function drawLine(params) {
@@ -259,9 +258,21 @@
         return
       }
       for (i; i < end; i++) {
+        // ctx.beginPath();
+        // ctx.fillStyle = "#000";
+        // ctx.arc(getXDistance(i, 'plus'), transformAxis('Y', curveData[i]), 2, Math.PI*2,0, true);
+        // ctx.fill()
+        // ctx.beginPath();
+        // ctx.fillStyle = "red";
+        // ctx.arc(controlPoint[i][1]['x'], transformAxis('Y', controlPoint[i][1]['y']), 4, Math.PI*2,0, true);
+        // ctx.fill()
+        // ctx.closePath();
+        // ctx.fillStyle = "red";
+        // ctx.arc(controlPoint[i + 1][0]['x'], transformAxis('Y', controlPoint[i + 1][0]['y']), 4, Math.PI*2,0, true);
+        // ctx.fill()
         ctx.beginPath();
         ctx.moveTo(getXDistance(i, 'plus'), transformAxis('Y', curveData[i]))
-        ctx.bezierCurveTo(controlPoint[i][1]['x'], transformAxis('Y', controlPoint[i][1]['y']), controlPoint[i + 1][0]['x'], transformAxis('Y', controlPoint[i + 1][0]['y']), getXDistance(i + 1, 'plus'), transformAxis('Y', curveData[i + 1]));     
+        ctx.bezierCurveTo(controlPoint[i][1]['x'], transformAxis('Y', controlPoint[i][1]['y']), controlPoint[i + 1][0]['x'], transformAxis('Y', controlPoint[i + 1][0]['y']), getXDistance(i + 1, 'plus'), transformAxis('Y', curveData[i + 1]));   
         ctx.lineWidth = 2;
         ctx.strokeStyle = "green";
         ctx.stroke();
@@ -280,7 +291,7 @@
           yControlDis = getXYControlDis(i + 1, i - 1, rate, 'Y');
           xControlDis = getXYControlDis(i + 1, i - 1, rate, 'X');
         }
-        const flag = (i > 0) && (i <= curveData.length - 2) && (curveData[i] < curveData[i + 1]);
+        const flag = (i > 0) && (i <= curveData.length - 2) && (curveData[i + 1] > curveData[i - 1]);
         const getControlY = function(type) {
           const minus = curveData[i] - yControlDis / 2;
           const plus = curveData[i] + yControlDis / 2;
