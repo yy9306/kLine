@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>k线图</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.9.0/lodash.min.js"></script>
   <style>
     *{
       padding: 0;
@@ -53,9 +54,23 @@
       { openPrice: 550, endPrice: 500, minPrice: 580, highPrice: 470, date: '2020-10-28' },
       { openPrice: 510, endPrice: 470, minPrice: 430, highPrice: 520, date: '2020-10-29' },
       { openPrice: 470, endPrice: 420, minPrice: 400, highPrice: 490, date: '2020-10-30' },
+      { openPrice: 420, endPrice: 480, minPrice: 400, highPrice: 490, date: '2020-10-31' },
+      { openPrice: 480, endPrice: 520, minPrice: 450, highPrice: 520, date: '2020-11-01' },
+      { openPrice: 520, endPrice: 550, minPrice: 500, highPrice: 580, date: '2020-11-02' },
+      { openPrice: 550, endPrice: 600, minPrice: 520, highPrice: 620, date: '2020-11-03' },
+      { openPrice: 610, endPrice: 570, minPrice: 530, highPrice: 650, date: '2020-11-04' },
+      { openPrice: 570, endPrice: 630, minPrice: 500, highPrice: 640, date: '2020-11-05' },
+      { openPrice: 630, endPrice: 685, minPrice: 600, highPrice: 690, date: '2020-11-06' },
+      { openPrice: 690, endPrice: 620, minPrice: 620, highPrice: 700, date: '2020-11-07' },
+      { openPrice: 620, endPrice: 570, minPrice: 530, highPrice: 640, date: '2020-11-08' },
+      { openPrice: 570, endPrice: 490, minPrice: 480, highPrice: 580, date: '2020-11-09' },
     ]
-    const curveData = [570, 500, 512, 470, 400, 360, 200, 210, 150, 154, 156, 150, 146, 126, 150, 200, 300, 380, 360, 320, 450, 460, 560, 700, 640, 690, 550, 500, 470, 420];
-
+    const curveData = getCurveData(sourceData);
+    
+    function getCurveData(data) {
+      return data.map(item => item.endPrice);
+    }
+ 
     class Kline {
       constructor(data) {
         this.dom = data.dom;
@@ -87,6 +102,7 @@
               fontColor: '#000'
             }   
           },
+          // y轴
           yAxis: {
             color: '#000',
             lineWidth: 2,
@@ -98,7 +114,8 @@
           },
           curve: {
             lineWidth: 3,
-            lineColor: '#2c8df3'
+            lineColor: '#2c8df3',
+            animationType: 'easeIn',
           },
           data: [],
           lineData: []
@@ -106,8 +123,7 @@
       }
       init(options) {
         const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
-        this.options.data = options.data;
-        this.options.lineData = options.lineData;
+        _.merge(this.options, options)
         this.createCanvas('bgCtx', 'bgCanvas', 10);
         this.createCanvas('dragCtx','dragCanvas', 11);
       }
@@ -115,8 +131,9 @@
         const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
         const { originX, originY } = this.getOrigin();
         const { cWidth, cHeight } = this.getCanvasInfo();
-        const { bgCtx, dragCtx, grid, data, xAxis, yAxis } = this.options;
-        const dragDom = document.getElementById('dragCanvas')
+        const { bgCtx, dragCtx, grid, curve, data, xAxis, yAxis } = this.options;
+        const dragDom = document.getElementById('dragCanvas');
+        const animateFn = this.getAnimationtype(curve.animationTyp)
         // x轴
         this.drawLine({ originX, originY, start: originX + cWidth, end: originY, ctx: bgCtx, color:  xAxis.color, lineWidth: xAxis.lineWidth});
         // y轴
@@ -128,7 +145,7 @@
         // k线
         this.drawKLine();
         // 曲线
-        this.step(1000, data);
+        this.step(1000, data, animateFn);
         // 拖拽
         dragDom.onmousedown = (event) => {
           Kline.isMouseDown = true;
@@ -154,7 +171,7 @@
         this.dom.appendChild(canvas);
       }
       // 贝塞尔曲线
-      step(duration, datas) {
+      step(duration, datas, animateFn) {
         const startTime = Date.now();
         let i = 0;
         const drawBezier = this.drawBezierCurveTo();
@@ -162,8 +179,8 @@
           const current = Date.now();
           const p = Math.min(1.0, (current - startTime) / duration);
           if (i < Math.floor(datas.length * p)) {
-            drawBezier(i, Math.floor(datas.length * p));
-            i = Math.floor(datas.length * p);
+            drawBezier(i, Math.floor(datas.length * animateFn(p)));
+            i = Math.floor(datas.length * animateFn(p));
           }
           if (p < 1.0) requestAnimationFrame(change);
         })
@@ -472,7 +489,7 @@
         return axisType === 'Y' ? (Math.abs(data[next] - data[prev]) / rate)
         : (Math.abs(this.transformK(next) - this.transformK(prev)) / rate);
       }
-      getAnimationData() {
+      getAnimationtype(type = 'easeIn') {
         const Easing = {
           // 匀速
           linear: function (t) {
@@ -491,7 +508,7 @@
             return (t *= 2) < 1 ? .5 * t * t : .5 * (1 - (--t) * (t - 2));
           }
         }
-        return Easing;
+        return Easing[type];
       }
     }
     
@@ -499,7 +516,10 @@
     const kline = new Kline({ dom, pixelRatio: window.devicePixelRatio });
     kline.init({
       data: sourceData,
-      lineData: curveData
+      lineData: curveData,
+      kConfig: {
+        kSpace: 15
+      }
     })
     kline.render();
 
