@@ -64,17 +64,12 @@
       { openPrice: 690, endPrice: 620, minPrice: 620, highPrice: 700, date: '2020-11-07' },
       { openPrice: 620, endPrice: 570, minPrice: 530, highPrice: 640, date: '2020-11-08' },
       { openPrice: 570, endPrice: 490, minPrice: 480, highPrice: 580, date: '2020-11-09' },
-    ]
-    const curveData = getCurveData(sourceData);
-    
-    function getCurveData(data) {
-      return data.map(item => item.endPrice);
-    }
+    ];
  
     class Kline {
-      constructor(data) {
-        this.dom = data.dom;
-        this.pixelRatio = data.pixelRatio;
+      constructor(dom, config) {
+        this.dom = dom;
+        this.pixelRatio = window.devicePixelRatio;
         this.options = {
           bgCtx: '', 
           dragCtx: '',
@@ -120,14 +115,18 @@
           data: [],
           lineData: []
         }
+
+        this._init(config);
+        this._render();
       }
-      init(options) {
+      _init(config) {
+        _.merge(this.options, config)
         const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
-        _.merge(this.options, options)
+        this.options.lineData = this.options.data.map(item => item.endPrice);
         this.createCanvas('bgCtx', 'bgCanvas', 10);
         this.createCanvas('dragCtx','dragCanvas', 11);
       }
-      render() {
+      _render() {
         const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
         const { originX, originY } = this.getOrigin();
         const { cWidth, cHeight } = this.getCanvasInfo();
@@ -209,8 +208,8 @@
         const { grid, yAxis } = this.options;
         const { fontSize, fontStyle, tDis } = yAxis;
         const { min, max } = this.getParams();
-        const { cWidth, cHeight } = this.getCanvasInfo();
-        const rate = (cHeight / (max - min));
+        const { cWidth } = this.getCanvasInfo();
+        const rate = this.getControlRate();
         const dis = Math.ceil((max - min) / 5);
         for (let i = 0, len = 6; i < 6; i++) {
           ctx.beginPath();
@@ -241,9 +240,8 @@
         const { data, kConfig } = this.options;
         const { kWidth, upColor, downColor, fillColor, lineWidth } = kConfig;
         const { bgCtx: ctx } = this.options;
-        const { min, max } = this.getParams();
-        const { cWidth, cHeight } = this.getCanvasInfo();
-        const rate = (cHeight / (max - min)).toFixed(2);
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
         for (let i = 0, len = data.length; i < len; i++) {
           const item = sourceData[i];
           const flag = item.openPrice > item.endPrice;
@@ -280,10 +278,9 @@
       }
       // 绘制曲线
       drawBezierCurveTo() {
-        const { bgCtx: ctx, curve } = this.options;
-        const { min, max } = this.getParams();
-        const { cWidth, cHeight } = this.getCanvasInfo();
-        const rate = (cHeight / (max - min)).toFixed(2);
+        const { bgCtx: ctx, curve, lineData: curveData } = this.options;
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
         let controlPoint = [];
         if (!controlPoint.length) {
           controlPoint = this.getControlPoint();
@@ -369,8 +366,7 @@
           const { cWidth, cHeight } = this.getCanvasInfo();
           const y =  event.offsetY * this.pixelRatio;
           const x = event.offsetX * this.pixelRatio;
-          const { min, max } = this.getParams();
-          const rate = (cHeight / (max - min)).toFixed(2);
+          const rate = this.getControlRate();
           const maxWidth = originX + data.length * (kSpace + kWidth) + kSpace / 2;
           this.clearCanvas(dragCtx);
           if (x > originX && x < maxWidth && y - grid.top > 0 && y - cHeight - grid.top < 0) {
@@ -389,10 +385,9 @@
       drawText(ctx, value, type) {
         const { data, kConfig, grid } = this.options;
         const { kSpace, kWidth } = kConfig;
-        const { cWidth, cHeight } = this.getCanvasInfo();
         const { originX, originY } = this.getOrigin();
-        const { min, max } = this.getParams();
-        const rate = (cHeight / (max - min)).toFixed(2);
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
         const tPadding = 10; // 文字两边的间距
         const lPadding = 4; // 文字上下
         const FONTSIZE = 24;
@@ -489,6 +484,11 @@
         return axisType === 'Y' ? (Math.abs(data[next] - data[prev]) / rate)
         : (Math.abs(this.transformK(next) - this.transformK(prev)) / rate);
       }
+      getControlRate() {
+        const { cHeight } = this.getCanvasInfo();
+        const { min, max } = this.getParams();
+        return (cHeight / (max - min)).toFixed(2);
+      }
       getAnimationtype(type = 'easeIn') {
         const Easing = {
           // 匀速
@@ -513,15 +513,12 @@
     }
     
     const dom = document.getElementById('main');
-    const kline = new Kline({ dom, pixelRatio: window.devicePixelRatio });
-    kline.init({
+    new Kline(dom, config = {
       data: sourceData,
-      lineData: curveData,
       kConfig: {
         kSpace: 15
       }
-    })
-    kline.render();
+    });
 
   </script>
 </body>
