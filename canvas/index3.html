@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>k线图</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.9.0/lodash.min.js"></script>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    #main{
+      position: relative;
+      width: 900px;
+      height: 500px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main"></div>
+
+  <script>
+     const sourceData = [
+      { openPrice: 580, endPrice: 570, minPrice: 570, highPrice: 590, date: '2020-10-1' },
+      { openPrice: 550, endPrice: 500, minPrice: 450, highPrice: 600, date: '2020-10-2' },
+      { openPrice: 510, endPrice: 512, minPrice: 480, highPrice: 550, date: '2020-10-3' },
+      { openPrice: 512, endPrice: 470, minPrice: 400, highPrice: 514, date: '2020-10-4' },
+      { openPrice: 460, endPrice: 400, minPrice: 370, highPrice: 570, date: '2020-10-5' },
+      { openPrice: 400, endPrice: 360, minPrice: 400, highPrice: 360, date: '2020-10-6' },
+      { openPrice: 360, endPrice: 200, minPrice: 180, highPrice: 360, date: '2020-10-7' },
+      { openPrice: 200, endPrice: 210, minPrice: 180, highPrice: 220, date: '2020-10-8' },
+      { openPrice: 206, endPrice: 150, minPrice: 210, highPrice: 130, date: '2020-10-9' },
+      { openPrice: 150, endPrice: 154, minPrice: 156, highPrice: 146, date: '2020-10-10' },
+      { openPrice: 154, endPrice: 156, minPrice: 156, highPrice: 146, date: '2020-10-11' },
+      { openPrice: 156, endPrice: 150, minPrice: 156, highPrice: 140, date: '2020-10-12' },
+      { openPrice: 150, endPrice: 146, minPrice: 130, highPrice: 150, date: '2020-10-13' },
+      { openPrice: 146, endPrice: 126, minPrice: 90, highPrice: 148, date: '2020-10-14' },
+      { openPrice: 120, endPrice: 150, minPrice: 120, highPrice: 170, date: '2020-10-15' },
+      { openPrice: 150, endPrice: 200, minPrice: 150, highPrice: 200, date: '2020-10-16' },
+      { openPrice: 200, endPrice: 300, minPrice: 200, highPrice: 300, date: '2020-10-17' },
+      { openPrice: 300, endPrice: 380, minPrice: 270, highPrice: 420, date: '2020-10-18' },
+      { openPrice: 330, endPrice: 360, minPrice: 270, highPrice: 420, date: '2020-10-19' },
+      { openPrice: 360, endPrice: 320, minPrice: 270, highPrice: 430, date: '2020-10-20' },
+      { openPrice: 320, endPrice: 450, minPrice: 270, highPrice: 380, date: '2020-10-21' },
+      { openPrice: 280, endPrice: 460, minPrice: 270, highPrice: 470, date: '2020-10-22' },
+      { openPrice: 450, endPrice: 560, minPrice: 390, highPrice: 600, date: '2020-10-23' },
+      { openPrice: 570, endPrice: 700, minPrice: 560, highPrice: 715, date: '2020-10-24' },
+      { openPrice: 680, endPrice: 640, minPrice: 690, highPrice: 640, date: '2020-10-25' },
+      { openPrice: 640, endPrice: 690, minPrice: 630, highPrice: 690, date: '2020-10-26' },
+      { openPrice: 690, endPrice: 550, minPrice: 500, highPrice: 700, date: '2020-10-27' },
+      { openPrice: 550, endPrice: 500, minPrice: 580, highPrice: 470, date: '2020-10-28' },
+      { openPrice: 510, endPrice: 470, minPrice: 430, highPrice: 520, date: '2020-10-29' },
+      { openPrice: 470, endPrice: 420, minPrice: 400, highPrice: 490, date: '2020-10-30' },
+      { openPrice: 420, endPrice: 480, minPrice: 400, highPrice: 490, date: '2020-10-31' },
+      { openPrice: 480, endPrice: 520, minPrice: 450, highPrice: 520, date: '2020-11-01' },
+      { openPrice: 520, endPrice: 550, minPrice: 500, highPrice: 580, date: '2020-11-02' },
+      { openPrice: 550, endPrice: 600, minPrice: 520, highPrice: 620, date: '2020-11-03' },
+      { openPrice: 610, endPrice: 570, minPrice: 530, highPrice: 650, date: '2020-11-04' },
+      { openPrice: 570, endPrice: 630, minPrice: 500, highPrice: 640, date: '2020-11-05' },
+      { openPrice: 630, endPrice: 685, minPrice: 600, highPrice: 690, date: '2020-11-06' },
+      { openPrice: 690, endPrice: 620, minPrice: 620, highPrice: 700, date: '2020-11-07' },
+      { openPrice: 620, endPrice: 570, minPrice: 530, highPrice: 640, date: '2020-11-08' },
+      { openPrice: 570, endPrice: 490, minPrice: 480, highPrice: 580, date: '2020-11-09' },
+    ];
+ 
+    class Kline {
+      constructor(dom, config) {
+        this.dom = dom;
+        this.pixelRatio = window.devicePixelRatio;
+        this.options = {
+          bgCtx: '', 
+          dragCtx: '',
+          grid: {
+            top: 60,
+            left: 140,
+            bottom: 140,
+            right: 60
+          },
+          kConfig: {
+            kSpace: 20,
+            kWidth: 20,
+            upColor: 'red',
+            downColor: 'green',
+            fillColor: '#fff',
+            lineWidth: 2
+          },
+          // x轴
+          xAxis: {
+            color: '#000',
+            lineWidth: 2,
+            tDis: 4,
+            fontStyle: {
+              fontSize: 24,
+              fontColor: '#000'
+            }   
+          },
+          // y轴
+          yAxis: {
+            color: '#000',
+            lineWidth: 2,
+            tDis: 10,
+            fontStyle: {
+              fontSize: 24,
+              fontColor: '#000'
+            }
+          },
+          curve: {
+            lineWidth: 3,
+            lineColor: '#2c8df3',
+            animationType: 'easeIn',
+          },
+          data: [],
+          lineData: []
+        }
+
+        this._init(config);
+        this._render();
+      }
+      _init(config) {
+        _.merge(this.options, config)
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        this.options.lineData = this.options.data.map(item => item.endPrice);
+        this.createCanvas('bgCtx', 'bgCanvas', 10);
+        this.createCanvas('dragCtx','dragCanvas', 11);
+      }
+      _render() {
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        const { originX, originY } = this.getOrigin();
+        const { cWidth, cHeight } = this.getCanvasInfo();
+        const { bgCtx, dragCtx, grid, curve, data, xAxis, yAxis } = this.options;
+        const dragDom = document.getElementById('dragCanvas');
+        const animateFn = this.getAnimationtype(curve.animationTyp)
+        // x轴
+        this.drawLine({ originX, originY, start: originX + cWidth, end: originY, ctx: bgCtx, color:  xAxis.color, lineWidth: xAxis.lineWidth});
+        // y轴
+        this.drawLine({ originX, originY, start: originX, end: grid.top, ctx: bgCtx, color:  yAxis.color, lineWidth: yAxis.lineWidth });
+        // 辅助线
+        this.drawSubline()
+        // x轴坐标
+        this.drawAxisText()
+        // k线
+        this.drawKLine();
+        // 曲线
+        this.step(1000, data, animateFn);
+        // 拖拽
+        dragDom.onmousedown = (event) => {
+          Kline.isMouseDown = true;
+          this.dynamicSubLine(event);
+        }
+        dragDom.onmousemove = (event) => {
+          this.dynamicSubLine(event);
+        }
+        dragDom.onmouseup = (event) => {
+          Kline.isMouseDown = false;
+          this.clearCanvas(dragCtx)
+        }
+      }
+      createCanvas(ctx, id, zIndex) {
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        const canvas = document.createElement('canvas');
+        canvas.innerHTML = 'Your browser does not support the canvas element.';
+        canvas.width = domWidth * this.pixelRatio;
+        canvas.height = domHeight * this.pixelRatio;
+        canvas.style.cssText = `position: absolute; left: 0; top: 0; z-index: ${zIndex}; width: ${domWidth}px; height: ${domHeight}px`;
+        canvas.setAttribute('id', id);
+        this.options[ctx] = canvas.getContext("2d");
+        this.dom.appendChild(canvas);
+      }
+      // 贝塞尔曲线
+      step(duration, datas, animateFn) {
+        const startTime = Date.now();
+        let i = 0;
+        const drawBezier = this.drawBezierCurveTo();
+        requestAnimationFrame(function change() {
+          const current = Date.now();
+          const p = Math.min(1.0, (current - startTime) / duration);
+          if (i < Math.floor(datas.length * p)) {
+            drawBezier(i, Math.floor(datas.length * animateFn(p)));
+            i = Math.floor(datas.length * animateFn(p));
+          }
+          if (p < 1.0) requestAnimationFrame(change);
+        })
+      }
+      // 坐标原点
+      getOrigin() {
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        const { grid } = this.options;
+        const originX = grid.left;
+        const originY = domHeight * this.pixelRatio - grid.bottom;
+        return { originX,  originY };
+      }
+      drawLine(params) {
+        const { originX, originY, start, end, ctx, color = '#000', lineWidth = 2 } = params;
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(start, end);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      drawSubline() {
+        const { bgCtx: ctx } = this.options;
+        const { originX, originY } = this.getOrigin();
+        const { grid, yAxis } = this.options;
+        const { fontSize, fontStyle, tDis } = yAxis;
+        const { min, max } = this.getParams();
+        const { cWidth } = this.getCanvasInfo();
+        const rate = this.getControlRate();
+        const dis = Math.ceil((max - min) / 5);
+        for (let i = 0, len = 6; i < 6; i++) {
+          ctx.beginPath();
+          i > 0 && this.drawDashLine(originX, this.transformXY(i * dis * rate, 'Y'), originX + cWidth, this.transformXY(i * dis * rate, 'Y'));
+          ctx.closePath();
+          // y轴坐标文字
+          ctx.beginPath();
+          ctx.font = `${fontStyle.fontSize}px bold Arial`;
+          ctx.fillStyle = `${fontStyle.fontColor}`;
+          ctx.textBaseline = i === 0 ? "bottom" : "middle";
+          ctx.textAlign = "right";
+          ctx.fillText(min + i * dis, originX - tDis, this.transformXY(i * dis * rate, 'Y'));
+          ctx.closePath();
+        }
+      }
+      // 画辅助线
+      drawDashLine(x, y, X, Y) {
+        const { bgCtx: ctx } = this.options;
+        ctx.beginPath();
+        ctx.setLineDash([5]);
+        ctx.moveTo(x, y);
+        ctx.lineTo(X, Y);
+        ctx.stroke();
+        ctx.setLineDash([])
+        ctx.closePath();
+      }
+      drawKLine() {
+        const { data, kConfig } = this.options;
+        const { kWidth, upColor, downColor, fillColor, lineWidth } = kConfig;
+        const { bgCtx: ctx } = this.options;
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
+        for (let i = 0, len = data.length; i < len; i++) {
+          const item = sourceData[i];
+          const flag = item.openPrice > item.endPrice;
+          const yDistance = flag ? this.transformXY((item.openPrice - min) * rate, 'Y') : this.transformXY((item.endPrice - min) * rate, 'Y');
+          ctx.beginPath();
+          // 线
+          ctx.moveTo(
+            this.transformKHalf(i),
+            this.transformXY((item.minPrice - min) * rate, 'Y')
+          );
+          ctx.lineTo(
+            this.transformKHalf(i),
+            this.transformXY((item.highPrice - min) * rate, 'Y')
+          );
+          // 矩形
+          ctx.moveTo(
+            this.transformK(i),
+            yDistance
+          );
+          ctx.rect(
+            this.transformK(i),
+            yDistance,
+            kWidth,
+            Math.abs((item.openPrice - item.endPrice) * rate)
+          );
+          ctx.strokeStyle = flag ? downColor : upColor;
+          ctx.fillStyle = flag ? downColor : fillColor;
+          ctx.lineWidth = lineWidth;
+          ctx.strokeWidht = lineWidth;
+          ctx.stroke();
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+      // 绘制曲线
+      drawBezierCurveTo() {
+        const { bgCtx: ctx, curve, lineData: curveData } = this.options;
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
+        let controlPoint = [];
+        if (!controlPoint.length) {
+          controlPoint = this.getControlPoint();
+        }
+        return (i, end) => {
+          const len = controlPoint.length - 1;
+          if (i >= len) {
+            return
+          }
+          for (i; i < end; i++) {
+            ctx.beginPath();
+            ctx.moveTo(this.transformKHalf(i), this.transformXY((curveData[i] - min) * rate, 'Y'));
+            ctx.bezierCurveTo(controlPoint[i][1]['x'], this.transformXY((controlPoint[i][1]['y'] - min) * rate, 'Y'), controlPoint[i + 1][0]['x'], this.transformXY((controlPoint[i + 1][0]['y'] - min) * rate, 'Y'), this.transformKHalf(i + 1), this.transformXY((curveData[i + 1] - min) * rate, 'Y'));   
+            ctx.lineWidth = `${curve.lineWidth}`;
+            ctx.strokeStyle = `${curve.lineColor}`;
+            ctx.stroke();
+            ctx.closePath();
+          }
+        }   
+      }
+      //计算贝塞尔曲线的控制点
+      getControlPoint() {
+        const { lineData: curveData } = this.options;
+        const { kSpace, kWidth } = this.options.kConfig;
+        const BASE_LENGTH = (kSpace + kWidth) / 2;
+        const controlPoint = [];
+        for (let i = 0; i < curveData.length; i++) {
+          const xDistance = this.transformKHalf(i);
+          let pointDistance, rate, yControlDis, xControlDis;
+          if ( i > 0 && i <=  curveData.length - 2) {
+            // 计算前一个点和后一个点的距离
+            pointDistance = this.getDistance(this.combinationDis(i - 1, curveData), this.combinationDis(i + 1, curveData));
+            rate = this.getRate(pointDistance, BASE_LENGTH);
+            yControlDis = this.getXYControlDis({ prev: i - 1, next: i + 1, rate, axisType: 'Y', data: curveData });
+            xControlDis = this.getXYControlDis({ prev: i - 1, next: i + 1, rate, axisType: 'X', data: curveData });
+          }
+          const flag = (i > 0) && (i <= curveData.length - 2) && (curveData[i + 1] > curveData[i - 1]);
+          const getControlY = function(type) {
+            const minus = curveData[i] - yControlDis / 2;
+            const plus = curveData[i] + yControlDis / 2;
+            return type ? minus : plus;
+          }
+          if (i === 0 || i === curveData.length - 1) {
+            controlPoint.push(
+              [
+                {x: xDistance - BASE_LENGTH, y: curveData[i]},
+                {x: xDistance + BASE_LENGTH, y: curveData[i]}
+              ]);
+          } else {
+            controlPoint.push(
+            [
+              {x: xDistance - xControlDis / 2, y: getControlY(flag)}, 
+              {x: xDistance + xControlDis / 2, y: getControlY(!flag)}
+            ]);  
+          } 
+        }
+        return controlPoint;
+      }
+      // x轴坐标
+      drawAxisText() {
+        const { data, bgCtx: ctx, xAxis } = this.options;
+        const { fontStyle, tDis } = xAxis;
+        const { originX, originY } = this.getOrigin();
+        const len = data.length;
+        const centerAxis = Math.floor(len / 2);
+        const xDateArr = [0, centerAxis, len - 1];
+        ctx.beginPath();
+        ctx.font = `${fontStyle.fontSize}px bold 黑体`;
+        ctx.fillStyle = "${fontStyle.fontColor}";
+        ctx.textBaseline = "top";
+        for (let i = 0; i < xDateArr.length; i++) {
+          i === 0 ? ctx.textAlign = "left" : ctx.textAlign = "center";
+          const number = xDateArr[i]
+          ctx.fillText(data[number].date, this.transformKHalf(number), originY + tDis);
+        }
+        ctx.closePath();
+      }
+      dynamicSubLine(event) {
+        if (Kline.isMouseDown) {
+          const { dragCtx, data, kConfig, grid } = this.options;
+          const { kSpace, kWidth } = kConfig;
+          const { originX, originY } = this.getOrigin();
+          const { cWidth, cHeight } = this.getCanvasInfo();
+          const y =  event.offsetY * this.pixelRatio;
+          const x = event.offsetX * this.pixelRatio;
+          const rate = this.getControlRate();
+          const maxWidth = originX + data.length * (kSpace + kWidth) + kSpace / 2;
+          this.clearCanvas(dragCtx);
+          if (x > originX && x < maxWidth && y - grid.top > 0 && y - cHeight - grid.top < 0) {
+            this.drawLine({ originX, originY: y, start: originX + cWidth, end: y, color: 'blue', ctx: dragCtx });
+            this.drawLine({ originX: x, originY, start: x, end: grid.top, ctx: dragCtx, color: 'blue' });
+            this.drawText(dragCtx, y, 'Y');
+            this.drawText(dragCtx, x, 'X')
+          }
+        }
+      }
+      clearCanvas(ctx) {
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        ctx.clearRect(0, 0, domWidth * this.pixelRatio, domHeight * this.pixelRatio);
+      }
+      // 拖拽辅助线
+      drawText(ctx, value, type) {
+        const { data, kConfig, grid } = this.options;
+        const { kSpace, kWidth } = kConfig;
+        const { originX, originY } = this.getOrigin();
+        const { min } = this.getParams();
+        const rate = this.getControlRate();
+        const tPadding = 10; // 文字两边的间距
+        const lPadding = 4; // 文字上下
+        const FONTSIZE = 24;
+        const remainder = (value - originX <= kSpace / 2) ? 0 : Math.floor((value - originX - kSpace / 2) / (kSpace + kWidth));
+        const width = type === 'Y' ? this.getTextWidth(ctx, originY - value) : this.getTextWidth(ctx, data[remainder].date); 
+        ctx.beginPath();
+        ctx.font = `${FONTSIZE}px bold 黑体`;
+        
+        // 绘制底色
+        if ( type === 'Y') {
+          const width = ctx.measureText((originY - value).toFixed(0)).width;
+          const point1 = originX - width - tPadding * 2;
+          const point2 = value - FONTSIZE / 2 - lPadding;
+          const point3 = value + FONTSIZE / 2 + lPadding;
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "right";
+          ctx.moveTo(point1, point2);
+          ctx.lineTo(originX, point2);
+          ctx.lineTo(originX, point3);
+          ctx.lineTo(point1,  point3);
+          ctx.lineTo(point1, point2);
+        } else {
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+          const point1 = value - width / 2 - tPadding;
+          const point2 = originY + FONTSIZE + 2 * lPadding;
+          const point3 = value + width / 2 + tPadding
+          ctx.moveTo(value, originY);
+          ctx.lineTo(point1, originY);
+          ctx.lineTo(point1, point2);
+          ctx.lineTo(point3, point2);
+          ctx.lineTo(point3, originY);
+          
+        }
+        ctx.fillStyle = '#d7d4f0';
+        ctx.fill();
+        ctx.fillStyle = "#000";
+        
+        type === 'Y' ? ctx.fillText(Number((originY - value) / rate + min).toFixed(0), originX - tPadding, value) : ctx.fillText(data[remainder].date, value, originY + lPadding);
+        ctx.closePath();
+      }
+       // canvas 获取文字宽度
+      getTextWidth(ctx, text) {
+        return ctx.measureText(text).width;
+      }
+      // y 轴最大 最小值
+      getParams() {
+        let minValue = 0;
+        let maxValue = 0;
+        this.options.data.forEach(item => {
+          minValue = minValue === 0 ? item.minPrice : Math.min(item.minPrice, minValue);
+          maxValue = Math.max(item.highPrice, maxValue);
+        });
+        return { min: Math.floor(minValue), max: Math.ceil(maxValue) };
+      }
+      // 获取canvas高度
+      getCanvasInfo() {
+        const { offsetWidth: domWidth, offsetHeight: domHeight } = this.dom;
+        const { grid } = this.options;
+        return { cWidth: domWidth * this.pixelRatio - grid.left - grid.right, cHeight: domHeight * this.pixelRatio - grid.top - grid.bottom}
+      }
+      // xy 轴坐标转换
+      transformXY(value, type) {
+        const { originX, originY } = this.getOrigin();
+        return type === 'X' ? originX + value : originY - value;
+      }
+      // x轴k线坐标转换
+      transformK(index) {
+        const { originX } = this.getOrigin();
+        const { kSpace, kWidth } = this.options.kConfig;
+        return (index + 1) * kSpace + index * kWidth + originX;
+      }
+      transformKHalf(index) {
+        const { kWidth } = this.options.kConfig;
+        return this.transformK(index) + kWidth / 2;
+      }
+      // 计算两点之间的距离
+      getDistance(point1, point2) {
+        const xDis = Math.pow((Math.abs(point2[0] - point1[0])), 2);
+        const yDis = Math.pow((Math.abs(point2[1] - point1[1])), 2);
+        return Math.sqrt(xDis + yDis);
+      }
+      // 组装坐标点
+      combinationDis(x, datas) {
+        return [this.transformK(x), datas[x]];
+      }
+      // 两条线的比例
+      getRate(pointDis, base) {
+        return (pointDis / (base * 2));
+      }
+      // 计算控制点中点
+      getXYControlDis(params) {
+        const { prev, next, rate, axisType, data } = params;
+        return axisType === 'Y' ? (Math.abs(data[next] - data[prev]) / rate)
+        : (Math.abs(this.transformK(next) - this.transformK(prev)) / rate);
+      }
+      getControlRate() {
+        const { cHeight } = this.getCanvasInfo();
+        const { min, max } = this.getParams();
+        return (cHeight / (max - min)).toFixed(2);
+      }
+      getAnimationtype(type = 'easeIn') {
+        const Easing = {
+          // 匀速
+          linear: function (t) {
+            return t;
+          },
+          // 匀加速
+          easeIn: function (t) {
+            return t * t;
+          },
+          // 匀减速
+          easeOut: function (t) {
+            return (2 - t) * t;
+          },
+          // 先加速后减速
+          easeBoth: function (t) {
+            return (t *= 2) < 1 ? .5 * t * t : .5 * (1 - (--t) * (t - 2));
+          }
+        }
+        return Easing[type];
+      }
+    }
+    
+    const dom = document.getElementById('main');
+    new Kline(dom, config = {
+      data: sourceData,
+      kConfig: {
+        kSpace: 15
+      }
+    });
+
+  </script>
+</body>
+</html>
