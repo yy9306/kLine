@@ -10,7 +10,7 @@
 
 ## 效果图
 
-![](./images/kLine.mp4)
+![](./images/kLine.gif)
 
 
 
