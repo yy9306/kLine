@@ -1,391 +1,450 @@
-body {
-  background: #f5f5f5; }
-
-.app .page .top-area {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+html, body {
+  height: 100%;
   width: 100%;
-  height: 50px;
-  padding: 0 15px;
-  box-sizing: border-box;
   background: #f5f5f5; }
-  .app .page .top-area .total {
-    line-height: 16px;
-    font-size: 16px;
-    font-weight: 500; }
-  .app .page .top-area .actions .icons {
-    display: flex;
-    align-items: center; }
-    .app .page .top-area .actions .icons .icon {
-      width: 16px;
-      height: 16px; }
-      .app .page .top-area .actions .icons .icon.icon-search {
-        background: url(../images/search-icon.png) no-repeat;
-        background-size: 16px 16px; }
-      .app .page .top-area .actions .icons .icon.icon-add {
-        width: 14px;
-        height: 14px;
-        margin-left: 10px;
-        background: url(../images/add-icon.png) no-repeat;
-        background-size: 14px 14px; }
 
-.app .home-page .list-view {
+.app {
   position: absolute;
   left: 0;
-  top: 50px;
-  bottom: 50px;
+  top: 0;
+  right: 0;
   width: 100%;
-  overflow-y: auto;
-  background: #f5f5f5; }
-  .app .home-page .list-view .lists .list {
-    background: #fff;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    box-sizing: border-box; }
-    .app .home-page .list-view .lists .list .avatar {
-      flex: 0 0 40px;
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 6px;
-      background: red; }
-    .app .home-page .list-view .lists .list .context {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex: 1;
-      height: 40px;
-      padding: 10px 0;
-      font-size: 14px;
-      color: #000;
-      border-bottom: 1px solid #f5f5f5; }
-      .app .home-page .list-view .lists .list .context .top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-right: 15px;
-        margin-bottom: 8px; }
-        .app .home-page .list-view .lists .list .context .top .name {
-          line-height: 14px;
-          font-size: 14px;
-          color: #000; }
-        .app .home-page .list-view .lists .list .context .top .date {
-          font-size: 10px;
-          color: #999; }
-      .app .home-page .list-view .lists .list .context .information {
-        font-size: 12px;
-        color: #999; }
-    .app .home-page .list-view .lists .list:last-child .context {
-      border-bottom: none; }
-
-.app .link-page .listView {
-  position: absolute;
-  left: 0;
-  top: 50px;
-  bottom: 50px;
-  width: 100%;
-  overflow-y: auto;
-  background: #fff; }
-  .app .link-page .listView .session .headline {
+  height: 100%;
+  overflow: hidden; }
+  .app .main {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
     width: 100%;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 15px;
-    box-sizing: border-box;
-    font-size: 16px;
-    color: #666;
-    background: #f5f5f5; }
-  .app .link-page .listView .session .lists .list {
-    display: flex;
-    align-items: center;
-    padding-left: 15px;
-    box-sizing: border-box; }
-    .app .link-page .listView .session .lists .list .avatar {
-      flex: 0 0 40px;
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 6px;
-      background: red; }
-    .app .link-page .listView .session .lists .list .context {
-      flex: 1;
-      line-height: 40px;
-      height: 40px;
-      padding: 10px 0;
-      font-size: 14px;
-      color: #000;
-      border-bottom: 1px solid #f5f5f5; }
-    .app .link-page .listView .session .lists .list:last-child .context {
-      border-bottom: none; }
-
-.app .find-page .listView {
-  position: absolute;
-  left: 0;
-  top: 50px;
-  bottom: 50px;
-  width: 100%;
-  overflow-y: auto;
-  background: #f5f5f5; }
-  .app .find-page .listView .session {
-    background: #fff; }
-    .app .find-page .listView .session .split-line {
-      width: 100%;
-      height: 5px;
-      background: #f5f5f5; }
-    .app .find-page .listView .session .lists .list {
+    height: 100%; }
+  .app .page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%; }
+    .app .page .top-area {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: flex;
       align-items: center;
-      padding-left: 15px;
-      box-sizing: border-box; }
-      .app .find-page .listView .session .lists .list .avatar {
-        flex: 0 0 30px;
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-        background: red; }
-      .app .find-page .listView .session .lists .list .context {
+      justify-content: space-between;
+      width: 100%;
+      height: 50px;
+      padding: 0 15px;
+      box-sizing: border-box;
+      background: #f5f5f5; }
+      .app .page .top-area .total {
+        line-height: 16px;
+        font-size: 16px;
+        font-weight: 500; }
+      .app .page .top-area .actions .icons {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        align-items: center; }
+        .app .page .top-area .actions .icons .icon {
+          width: 16px;
+          height: 16px; }
+          .app .page .top-area .actions .icons .icon.icon-search {
+            background: url(../images/search-icon.png) no-repeat;
+            background-size: 16px 16px; }
+          .app .page .top-area .actions .icons .icon.icon-add {
+            width: 14px;
+            height: 14px;
+            margin-left: 10px;
+            background: url(../images/add-icon.png) no-repeat;
+            background-size: 14px 14px; }
+  .app .home-page .list-view {
+    padding: 50px 0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    background: #f5f5f5; }
+    .app .home-page .list-view .lists .list {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      box-sizing: border-box; }
+      .app .home-page .list-view .lists .list .avatar {
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        border-radius: 6px;
+        background: red; }
+      .app .home-page .list-view .lists .list .context {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         flex: 1;
-        line-height: 30px;
-        height: 30px;
-        padding: 10px 15px 10px 0;
+        height: 40px;
+        padding: 10px 0;
         font-size: 14px;
         color: #000;
         border-bottom: 1px solid #f5f5f5; }
-        .app .find-page .listView .session .lists .list .context .arrow-icon {
-          width: 6px;
-          height: 10px;
-          background: url(../images/right-arrow.png) no-repeat;
-          background-size: 6px 10px; }
-      .app .find-page .listView .session .lists .list:last-child .context {
+        .app .home-page .list-view .lists .list .context .top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-right: 15px;
+          margin-bottom: 8px; }
+          .app .home-page .list-view .lists .list .context .top .name {
+            line-height: 14px;
+            font-size: 14px;
+            color: #000; }
+          .app .home-page .list-view .lists .list .context .top .date {
+            font-size: 10px;
+            color: #999; }
+        .app .home-page .list-view .lists .list .context .information {
+          font-size: 12px;
+          color: #999; }
+      .app .home-page .list-view .lists .list:last-child .context {
         border-bottom: none; }
-
-.app .me-page .top-area {
-  position: relative;
-  padding: 50px 15px 20px 15px;
-  background: #fff; }
-  .app .me-page .top-area .icon-camera {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url(../images/camera-icon.png) no-repeat;
-    background-size: 20px 20px; }
-  .app .me-page .top-area .personal-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center; }
-    .app .me-page .top-area .personal-wrapper .avatar {
-      flex: 0 0 60px;
-      width: 60px;
-      height: 60px;
-      margin-right: 15px;
-      border-radius: 6px;
-      overflow: hidden; }
-    .app .me-page .top-area .personal-wrapper .context {
-      flex: 1; }
-      .app .me-page .top-area .personal-wrapper .context .nick-name {
-        line-height: 18px;
-        margin-bottom: 10px;
-        font-size: 18px;
-        color: #000;
-        font-weight: 500; }
-      .app .me-page .top-area .personal-wrapper .context .person-wx-info {
+  .app .link-page .listView {
+    padding: 50px 0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    background: #f5f5f5; }
+    .app .link-page .listView .session {
+      background: #fff; }
+      .app .link-page .listView .session .headline {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 15px;
+        box-sizing: border-box;
+        font-size: 16px;
+        color: #666;
+        background: #f5f5f5; }
+      .app .link-page .listView .session .lists .list {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-        color: #666; }
-        .app .me-page .top-area .personal-wrapper .context .person-wx-info .code-img-wrapper {
+        padding-left: 15px;
+        box-sizing: border-box; }
+        .app .link-page .listView .session .lists .list .avatar {
+          flex: 0 0 40px;
+          width: 40px;
+          height: 40px;
+          margin-right: 10px;
+          border-radius: 6px;
+          background: red; }
+        .app .link-page .listView .session .lists .list .context {
+          flex: 1;
+          line-height: 40px;
+          height: 40px;
+          padding: 10px 0;
+          font-size: 14px;
+          color: #000;
+          border-bottom: 1px solid #f5f5f5; }
+        .app .link-page .listView .session .lists .list:last-child .context {
+          border-bottom: none; }
+  .app .find-page .listView {
+    padding: 50px 0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    background: #f5f5f5; }
+    .app .find-page .listView .session {
+      background: #fff; }
+      .app .find-page .listView .session .split-line {
+        width: 100%;
+        height: 5px;
+        background: #f5f5f5; }
+      .app .find-page .listView .session .lists .list {
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+        box-sizing: border-box; }
+        .app .find-page .listView .session .lists .list .avatar {
+          flex: 0 0 30px;
+          width: 30px;
+          height: 30px;
+          margin-right: 10px;
+          background: red; }
+        .app .find-page .listView .session .lists .list .context {
           display: flex;
-          align-items: center; }
-          .app .me-page .top-area .personal-wrapper .context .person-wx-info .code-img-wrapper .code-img {
-            width: 12px;
-            height: 12px;
-            margin-right: 15px; }
-          .app .me-page .top-area .personal-wrapper .context .person-wx-info .code-img-wrapper .icon-arrow {
-            display: inline-block;
+          align-items: center;
+          justify-content: space-between;
+          flex: 1;
+          line-height: 30px;
+          height: 30px;
+          padding: 10px 15px 10px 0;
+          font-size: 14px;
+          color: #000;
+          border-bottom: 1px solid #f5f5f5; }
+          .app .find-page .listView .session .lists .list .context .arrow-icon {
             width: 6px;
             height: 10px;
             background: url(../images/right-arrow.png) no-repeat;
             background-size: 6px 10px; }
-
-.app .me-page .listView {
-  position: absolute;
-  left: 0;
-  top: 130px;
-  bottom: 50px;
-  width: 100%;
-  overflow-y: auto;
-  background: #f5f5f5; }
-  .app .me-page .listView .session {
+        .app .find-page .listView .session .lists .list:last-child .context {
+          border-bottom: none; }
+  .app .me-page .top-areas {
+    position: relative;
+    padding: 50px 15px 20px 15px;
     background: #fff; }
-    .app .me-page .listView .session .split-line {
-      width: 100%;
-      height: 10px;
-      background: #f5f5f5; }
-    .app .me-page .listView .session .lists .list {
+    .app .me-page .top-areas .icon-camera {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: url(../images/camera-icon.png) no-repeat;
+      background-size: 20px 20px; }
+    .app .me-page .top-areas .personal-wrapper {
       display: flex;
       align-items: center;
-      padding-left: 15px;
-      box-sizing: border-box; }
-      .app .me-page .listView .session .lists .list .avatar {
-        flex: 0 0 30px;
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-        background: red; }
-      .app .me-page .listView .session .lists .list .context {
+      justify-content: center; }
+      .app .me-page .top-areas .personal-wrapper .avatar {
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+        border-radius: 6px;
+        overflow: hidden; }
+      .app .me-page .top-areas .personal-wrapper .context {
+        flex: 1; }
+        .app .me-page .top-areas .personal-wrapper .context .nick-name {
+          line-height: 18px;
+          margin-bottom: 10px;
+          font-size: 18px;
+          color: #000;
+          font-weight: 500; }
+        .app .me-page .top-areas .personal-wrapper .context .person-wx-info {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 14px;
+          color: #666; }
+          .app .me-page .top-areas .personal-wrapper .context .person-wx-info .code-img-wrapper {
+            display: flex;
+            align-items: center; }
+            .app .me-page .top-areas .personal-wrapper .context .person-wx-info .code-img-wrapper .code-img {
+              width: 12px;
+              height: 12px;
+              margin-right: 15px; }
+            .app .me-page .top-areas .personal-wrapper .context .person-wx-info .code-img-wrapper .icon-arrow {
+              display: inline-block;
+              width: 6px;
+              height: 10px;
+              background: url(../images/right-arrow.png) no-repeat;
+              background-size: 6px 10px; }
+  .app .me-page .listView {
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    background: #f5f5f5; }
+    .app .me-page .listView .session {
+      background: #fff; }
+      .app .me-page .listView .session .split-line {
+        width: 100%;
+        height: 10px;
+        background: #f5f5f5; }
+      .app .me-page .listView .session .lists .list {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        flex: 1;
-        line-height: 30px;
-        height: 30px;
-        padding: 10px 15px 10px 0;
-        font-size: 14px;
-        color: #000;
-        border-bottom: 1px solid #f5f5f5; }
-        .app .me-page .listView .session .lists .list .context .arrow-icon {
-          width: 6px;
-          height: 10px;
-          background: url(../images/right-arrow.png) no-repeat;
-          background-size: 6px 10px; }
-      .app .me-page .listView .session .lists .list:last-child .context {
-        border-bottom: none; }
-
-.app .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  background: #fff; }
-  .app .footer .tabs {
-    display: flex;
+        padding-left: 15px;
+        box-sizing: border-box; }
+        .app .me-page .listView .session .lists .list .avatar {
+          flex: 0 0 30px;
+          width: 30px;
+          height: 30px;
+          margin-right: 10px;
+          background: red; }
+        .app .me-page .listView .session .lists .list .context {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex: 1;
+          line-height: 30px;
+          height: 30px;
+          padding: 10px 15px 10px 0;
+          font-size: 14px;
+          color: #000;
+          border-bottom: 1px solid #f5f5f5; }
+          .app .me-page .listView .session .lists .list .context .arrow-icon {
+            width: 6px;
+            height: 10px;
+            background: url(../images/right-arrow.png) no-repeat;
+            background-size: 6px 10px; }
+        .app .me-page .listView .session .lists .list:last-child .context {
+          border-bottom: none; }
+  .app .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
     width: 100%;
-    padding: 7px 0;
-    font-size: 12px; }
-    .app .footer .tabs .tab {
+    height: 50px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    background: #fff; }
+    .app .footer .tabs {
+      display: flex;
+      width: 100%;
+      padding: 7px 0;
+      font-size: 12px; }
+      .app .footer .tabs .tab {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        flex: 1;
+        color: #262626;
+        cursor: pointer; }
+        .app .footer .tabs .tab .text {
+          display: block;
+          margin-top: 3px; }
+  .app .chat-page {
+    width: 100%; }
+    .app .chat-page .top-areas {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: flex;
       align-items: center;
-      flex-direction: column;
-      flex: 1;
-      color: #262626;
-      cursor: pointer; }
-      .app .footer .tabs .tab .text {
-        display: block;
-        margin-top: 3px; }
-
-.app .chat-page .top-area {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 50px;
-  padding: 0 15px;
-  box-sizing: border-box;
-  background: #fff; }
-  .app .chat-page .top-area .leading {
-    display: flex;
-    align-items: center;
-    font-size: 16px; }
-    .app .chat-page .top-area .leading .icon-back {
-      display: inline-block;
-      width: 9px;
-      height: 15px;
-      margin-right: 10px;
-      background: url(../images/right-arrow.png) no-repeat;
-      background-size: 9px 15px;
-      transform: rotate(180deg); }
-  .app .chat-page .top-area .actions {
-    font-size: 20px;
-    font-weight: 500; }
-
-.app .chat-page .listView {
-  position: absolute;
-  left: 0;
-  top: 50px;
-  bottom: 50px;
-  width: 100%;
-  overflow-y: auto; }
-  .app .chat-page .listView .lists {
-    width: 100%;
-    height: 100%;
-    padding: 10px 10px;
-    box-sizing: border-box; }
-    .app .chat-page .listView .lists .list {
-      display: flex;
-      align-items: center; }
-      .app .chat-page .listView .lists .list .avatar {
-        flex: 0 0 40px;
-        width: 40px;
-        height: 40px;
-        margin-right: 15px;
-        border-radius: 6px; }
-      .app .chat-page .listView .lists .list .context {
-        position: relative;
-        font-size: 14px;
-        color: #333; }
-        .app .chat-page .listView .lists .list .context .send-message {
-          display: block;
-          height: 40px;
-          line-height: 30px;
-          padding: 5px 10px;
-          box-sizing: border-box;
-          background: #fff;
-          border-radius: 4px; }
-        .app .chat-page .listView .lists .list .context::after {
-          content: '';
-          position: absolute;
-          left: -5px;
-          top: 15px;
-          transform: rotate(180deg);
-          border-left: 5px solid #fff;
-          border-top: 5px solid transparent;
-          border-bottom: 5px solid transparent; }
-
-.app .chat-page .chat-footer {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 50px;
-  padding: 0 10px;
-  box-sizing: border-box;
-  background: #f5f5f5;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
-  .app .chat-page .chat-footer .icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px; }
-    .app .chat-page .chat-footer .icon.icon-voice {
-      background: url(../images/voice-icon.png) no-repeat;
-      background-size: 100% 100%; }
-    .app .chat-page .chat-footer .icon.icon-smile {
-      background: url(../images/smile-icon.png) no-repeat;
-      background-size: 100% 100%; }
-    .app .chat-page .chat-footer .icon.icon-add {
-      margin-left: 10px;
-      background: url(../images/add-icon.png) no-repeat;
-      background-size: 100% 100%; }
-  .app .chat-page .chat-footer .input-wrapper {
-    flex: 1;
-    height: 30px;
-    margin: 0 10px; }
-    .app .chat-page .chat-footer .input-wrapper input {
+      justify-content: space-between;
       width: 100%;
-      height: 100%;
+      height: 50px;
+      padding: 0 15px;
+      box-sizing: border-box;
+      background: #fff; }
+      .app .chat-page .top-areas .leading {
+        display: flex;
+        align-items: center;
+        font-size: 16px; }
+        .app .chat-page .top-areas .leading .icon-back {
+          display: inline-block;
+          width: 9px;
+          height: 15px;
+          margin-right: 10px;
+          background: url(../images/right-arrow.png) no-repeat;
+          background-size: 9px 15px;
+          transform: rotate(180deg); }
+      .app .chat-page .top-areas .actions {
+        font-size: 20px;
+        font-weight: 500; }
+    .app .chat-page .listView {
+      position: absolute;
+      left: 0;
+      top: 50px;
+      bottom: 50px;
+      width: 100%;
+      overflow-y: auto; }
+      .app .chat-page .listView .lists {
+        width: 100%;
+        height: 100%;
+        padding: 10px 10px;
+        box-sizing: border-box; }
+        .app .chat-page .listView .lists .list {
+          display: flex;
+          align-items: center; }
+          .app .chat-page .listView .lists .list .avatar {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            border-radius: 6px; }
+          .app .chat-page .listView .lists .list .context {
+            position: relative;
+            font-size: 14px;
+            color: #333; }
+            .app .chat-page .listView .lists .list .context .send-message {
+              display: block;
+              height: 40px;
+              line-height: 30px;
+              padding: 5px 10px;
+              box-sizing: border-box;
+              background: #fff;
+              border-radius: 4px; }
+            .app .chat-page .listView .lists .list .context::after {
+              content: '';
+              position: absolute;
+              left: -5px;
+              top: 15px;
+              transform: rotate(180deg);
+              border-left: 5px solid #fff;
+              border-top: 5px solid transparent;
+              border-bottom: 5px solid transparent; }
+    .app .chat-page .chat-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 50px;
       padding: 0 10px;
       box-sizing: border-box;
-      outline: none;
-      border: none; }
+      background: #f5f5f5;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+      .app .chat-page .chat-footer .icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px; }
+        .app .chat-page .chat-footer .icon.icon-voice {
+          background: url(../images/voice-icon.png) no-repeat;
+          background-size: 100% 100%; }
+        .app .chat-page .chat-footer .icon.icon-smile {
+          background: url(../images/smile-icon.png) no-repeat;
+          background-size: 100% 100%; }
+        .app .chat-page .chat-footer .icon.icon-add {
+          margin-left: 10px;
+          background: url(../images/add-icon.png) no-repeat;
+          background-size: 100% 100%; }
+      .app .chat-page .chat-footer .input-wrapper {
+        flex: 1;
+        height: 30px;
+        margin: 0 10px; }
+        .app .chat-page .chat-footer .input-wrapper input {
+          width: 100%;
+          height: 100%;
+          padding: 0 10px;
+          box-sizing: border-box;
+          outline: none;
+          border: none; }
+
+.home-page.slide-enter-right, .link-page.slide-enter-right, .find-page.slide-enter-right, .me-page.slide-enter-right, .chat-page.slide-enter-right {
+  animation: formEnterRight 0.6s;
+  animation-fill-mode: forwards; }
+
+.main.slide-enter-left, .home-page.slide-enter-left, .link-page.slide-enter-left, .find-page.slide-enter-left, .me-page.slide-enter-left {
+  animation: formEnterLeft 0.6s;
+  animation-fill-mode: forwards; }
+
+.home-page.slide-leave-right, .link-page.slide-leave-right, .find-page.slide-leave-right, .me-page.slide-leave-right, .chat-page.slide-leave-right {
+  animation: fromleaveRight 0.6s;
+  animation-fill-mode: forwards; }
+
+.main.slide-leave-left, .home-page.slide-leave-left, .link-page.slide-leave-left, .find-page.slide-leave-left, .me-page.slide-leave-left {
+  animation: fromleaveLeft 0.6s;
+  animation-fill-mode: forwards; }
+
+@keyframes formEnterRight {
+  from {
+    transform: translate3d(100%, 0, 0); }
+  to {
+    transform: translate3d(0, 0, 0); } }
+
+@keyframes formEnterLeft {
+  from {
+    transform: translate3d(-100%, 0, 0); }
+  to {
+    transform: translate3d(0, 0, 0); } }
+
+@keyframes fromleaveLeft {
+  from {
+    transform: translate3d(0, 0, 0); }
+  to {
+    transform: translate3d(-100%, 0, 0); } }
+
+@keyframes fromleaveRight {
+  from {
+    transform: translate3d(0, 0, 0); }
+  to {
+    transform: translate3d(100%, 0, 0); } }

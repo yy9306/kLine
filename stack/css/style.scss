@@ -1,12 +1,36 @@
-body{
+html,body{
+ height: 100%;
+ width: 100%;
  background: #f5f5f5;
 }
 .app {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .main{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
   .page{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
     .top-area{
-      // position: fixed;
-      // top: 0;
-      // left: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -45,10 +69,8 @@ body{
   }
   .home-page{
     .list-view{
-      position: absolute;
-      left: 0;
-      top: 50px;
-      bottom: 50px;
+      padding: 50px 0;
+      box-sizing: border-box;
       width: 100%;
       overflow-y: auto;
       background: #f5f5f5;
@@ -109,14 +131,13 @@ body{
   }
   .link-page{
     .listView{
-      position: absolute;
-      left: 0;
-      top: 50px;
-      bottom: 50px;
+      padding: 50px 0;
+      box-sizing: border-box;
       width: 100%;
       overflow-y: auto;
-      background: #fff;
+      background: #f5f5f5;
       .session{
+        background: #fff;
         .headline{
           width: 100%;
           height: 30px;
@@ -162,10 +183,8 @@ body{
   }
   .find-page{
     .listView{
-      position: absolute;
-      left: 0;
-      top: 50px;
-      bottom: 50px;
+      padding: 50px 0;
+      box-sizing: border-box;
       width: 100%;
       overflow-y: auto;
       background: #f5f5f5;
@@ -218,7 +237,7 @@ body{
     }
   }
   .me-page{
-    .top-area{
+    .top-areas{
       position: relative;
       padding: 50px 15px 20px 15px;
       background: #fff;
@@ -280,10 +299,7 @@ body{
       }
     }
     .listView{
-      position: absolute;
-      left: 0;
-      top: 130px;
-      bottom: 50px;
+      box-sizing: border-box;
       width: 100%;
       overflow-y: auto;
       background: #f5f5f5;
@@ -339,6 +355,7 @@ body{
     position: fixed;
     left: 0;
     bottom: 0;
+    z-index: 10;
     width: 100%;
     height: 50px;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
@@ -363,8 +380,9 @@ body{
     }
   }
   .chat-page{
-    .top-area{
-      position: fixed;
+    width: 100%;
+    .top-areas{
+      position: absolute;
       top: 0;
       left: 0;
       display: flex;
@@ -444,9 +462,10 @@ body{
       }
     }
     .chat-footer{
-      // position: fixed;
-      // bottom: 0;
-      // left: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
       display: flex;
       align-items: center;
       width: 100%;
@@ -488,4 +507,46 @@ body{
       }
     }
   }
+}
+
+.home-page.slide-enter-right, .link-page.slide-enter-right, .find-page.slide-enter-right, .me-page.slide-enter-right, .chat-page.slide-enter-right{
+  animation: formEnterRight 0.6s;
+  animation-fill-mode:forwards;
+}
+.main.slide-enter-left, .home-page.slide-enter-left, .link-page.slide-enter-left, .find-page.slide-enter-left, .me-page.slide-enter-left{
+  animation: formEnterLeft 0.6s;
+  animation-fill-mode:forwards;
+}
+.home-page.slide-leave-right, .link-page.slide-leave-right, .find-page.slide-leave-right, .me-page.slide-leave-right, .chat-page.slide-leave-right{
+  animation: fromleaveRight 0.6s;
+  animation-fill-mode:forwards;
+}
+.main.slide-leave-left, .home-page.slide-leave-left, .link-page.slide-leave-left, .find-page.slide-leave-left, .me-page.slide-leave-left{
+  animation: fromleaveLeft 0.6s;
+  animation-fill-mode:forwards;
+}
+
+
+@keyframes formEnterRight
+{
+	from { transform: translate3d(100%, 0, 0)}
+	to {transform: translate3d(0, 0, 0)}
+}
+
+@keyframes formEnterLeft
+{
+	from { transform: translate3d(-100%, 0, 0)}
+	to {transform: translate3d(0, 0, 0)}
+}
+
+@keyframes fromleaveLeft
+{
+	from { transform: translate3d(0, 0, 0)}
+	to {transform: translate3d(-100%, 0, 0)}
+}
+
+@keyframes fromleaveRight
+{
+	from { transform: translate3d(0, 0, 0)}
+	to {transform: translate3d(100%, 0, 0)}
 }
