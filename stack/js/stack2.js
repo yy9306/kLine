@@ -43,7 +43,7 @@ const pageTemplate = {
 };
 
 const childHtml = {
-  child1: `<div class="chat-page page" style="display:none"><div class="top-areas"><div class="leading"><i class="icon-back"></i> <span class="nick-name">金三胖</span></div><div class="actions"><i class="icon-more">···</i></div></div><div class="listView"><ul class="lists"><li class="list"><div class="avatar"><img src="./images/avatar.jpg" alt="" width="100%" height="100%"></div><div class="context"><span class="send-message">跟着波波老师学思维 </span><i class="icon-triangle"></i></div></li></ul></div><div class="chat-footer"><i class="icon icon-voice"></i><div class="input-wrapper"><input type="text"></div><div class="right-icons"><i class="icon icon-smile"></i> <i class="icon icon-add"></i></div></div></div>`
+  child1: `<div class="chat-page page slide-enter-right" style="display:none"><div class="top-areas"><div class="leading"><i class="icon-back"></i> <span class="nick-name">金三胖</span></div><div class="actions"><i class="icon-more">···</i></div></div><div class="listView"><ul class="lists"><li class="list"><div class="avatar"><img src="./images/avatar.jpg" alt="" width="100%" height="100%"></div><div class="context"><span class="send-message">跟着波波老师学思维 </span><i class="icon-triangle"></i></div></li></ul></div><div class="chat-footer"><i class="icon icon-voice"></i><div class="input-wrapper"><input type="text"></div><div class="right-icons"><i class="icon icon-smile"></i> <i class="icon icon-add"></i></div></div></div>`
 }
 
 const $footer = $('.footer');
@@ -53,7 +53,9 @@ const childStacks = stackFactory();
 $(function() {
   let currentIndex = 0;
   const cachePage = [0];
-  handleStacks(currentIndex); // 添加首页入栈
+  const $main = $('.main');
+  const $chat = $('.chat-page');
+  handleStacks(pageStacks, pageTemplate, 'html', currentIndex); // 添加首页入栈
   $footer.before(pageStacks.peek());
   $footer.on('click', '.tab', function() {
     const index = $(this).index();
@@ -62,7 +64,7 @@ $(function() {
     removeClass(currentele);
     if (!cachePage.includes(index)) {
       cachePage.push(index);
-      handleStacks(index);
+      handleStacks(pageStacks, pageTemplate, 'html', index);
       $footer.before(pageStacks.peek());
     }
     const switchele = joinClassName('page', index);
@@ -82,9 +84,30 @@ $(function() {
     }, 500);
   })
 
+  $('.router').on('click', '.list', function() {
+    const index = childStacks.length + 1;
+    handleStacks(childStacks, childHtml, 'child', index);
+    removeClass($main, $('.chat-page'));
+    $main.after(childStacks.peek());
+    addClass($main, 'slide-leave-left');
+    $('.chat-page').css('display', 'block');
+    $main.css('dispaly', 'none');
+  });
+
+  $('.app').on('click','.icon-back', function() {
+    // const $chat = $('.chat-page');
+    removeClass($main, $('.chat-page'));
+    addClass($main, 'slide-enter-left');
+    addClass($('.chat-page'), 'slide-leave-right');
+    setTimeout(() => {
+      $('.chat-page').remove();
+      childStacks.pop();
+    }, 500)
+  })
+});
 //往栈里添加数据
-function handleStacks(index) {
-  pageStacks.push(pageTemplate[`html${index}`]);
+function handleStacks(stack, templateObj, prefix, index) {
+  stack.push(templateObj[`${prefix}${index}`]);
 }
 
 
