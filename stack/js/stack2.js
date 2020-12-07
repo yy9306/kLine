@@ -54,7 +54,6 @@ $(function() {
   let currentIndex = 0;
   const cachePage = [0];
   const $main = $('.main');
-  const $chat = $('.chat-page');
   handleStacks(pageStacks, pageTemplate, 'html', currentIndex); // 添加首页入栈
   $footer.before(pageStacks.peek());
   $footer.on('click', '.tab', function() {
@@ -87,7 +86,6 @@ $(function() {
   $('.router').on('click', '.list', function() {
     const index = childStacks.length + 1;
     handleStacks(childStacks, childHtml, 'child', index);
-    removeClass($main, $('.chat-page'));
     $main.after(childStacks.peek());
     addClass($main, 'slide-leave-left');
     $('.chat-page').css('display', 'block');
@@ -95,21 +93,21 @@ $(function() {
   });
 
   $('.app').on('click','.icon-back', function() {
-    // const $chat = $('.chat-page');
-    removeClass($main, $('.chat-page'));
+    const $chat = $('.chat-page');
+    removeClass($main, $chat);
     addClass($main, 'slide-enter-left');
-    addClass($('.chat-page'), 'slide-leave-right');
+    addClass($chat, 'slide-leave-right');
     setTimeout(() => {
-      $('.chat-page').remove();
+      $chat.remove();
       childStacks.pop();
     }, 500)
   })
 });
+
 //往栈里添加数据
 function handleStacks(stack, templateObj, prefix, index) {
   stack.push(templateObj[`${prefix}${index}`]);
 }
-
 
 // 移除样式
 function removeClass(...nodes) {  
