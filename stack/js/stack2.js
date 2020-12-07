@@ -52,6 +52,7 @@ const childStacks = stackFactory();
 
 $(function() {
   let currentIndex = 0;
+  let flag = true;
   const cachePage = [0];
   const $main = $('.main');
   handleStacks(pageStacks, pageTemplate, 'html', currentIndex); // 添加首页入栈
@@ -60,6 +61,10 @@ $(function() {
     const index = $(this).index();
     const currentele = joinClassName('page', currentIndex);
     if (currentIndex === index) return;
+    if (!flag) return;
+    flag = false;
+    $('.tab').eq(currentIndex).removeClass('active');
+    $('.tab').eq(index).addClass('active');
     removeClass(currentele);
     if (!cachePage.includes(index)) {
       cachePage.push(index);
@@ -80,7 +85,8 @@ $(function() {
       currentele.css('display', 'none');
       removeClass(currentele, switchele);
       currentIndex = index;
-    }, 500);
+      flag = true;
+    }, 400);
   })
 
   $('.router').on('click', '.list', function() {
@@ -94,13 +100,16 @@ $(function() {
 
   $('.app').on('click','.icon-back', function() {
     const $chat = $('.chat-page');
+    if (!flag) return;
+    flag = false;
     removeClass($main, $chat);
     addClass($main, 'slide-enter-left');
     addClass($chat, 'slide-leave-right');
     setTimeout(() => {
       $chat.remove();
       childStacks.pop();
-    }, 500)
+      flag = true;
+    }, 400);
   })
 });
 

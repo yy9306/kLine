@@ -372,6 +372,50 @@ html,body{
         flex: 1;
         color: #262626;
         cursor: pointer;
+        &.active{
+          .icon{
+            &.icon-wx{
+              background: url(../images/wx-icon-active.png) no-repeat;
+              background-size: 100% 100%;
+            }
+            &.icon-book{
+              background: url(../images/book-icon-active.png) no-repeat;
+              background-size: 100% 100%;
+            }
+            &.icon-find{
+              background: url(../images/find-icon-active.png) no-repeat;
+              background-size: 100% 100%;
+            }
+            &.icon-me{
+              background: url(../images/me-icon-active.png) no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+          .text{
+            color: #20bf64;
+          }
+        }
+        .icon{
+          display: block;
+          width: 24px;
+          height: 24px;
+          &.icon-wx{
+            background: url(../images/wx-icon.png) no-repeat;
+            background-size: 100% 100%;
+          }
+          &.icon-book{
+            background: url(../images/book-icon.png) no-repeat;
+            background-size: 100% 100%;
+          }
+          &.icon-find{
+            background: url(../images/find-icon.png) no-repeat;
+            background-size: 100% 100%;
+          }
+          &.icon-me{
+            background: url(../images/me-icon.png) no-repeat;
+            background-size: 100% 100%;
+          }
+        }
         .text{
           display: block;
           margin-top: 3px;
