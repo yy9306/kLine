@@ -31,6 +31,57 @@ class RouterStack{
   }
 }
 
+class Tab{
+  constructor(ele, activeIndex = 0) {
+    this.tabs = ele.querySelector('.tabs-wrapper');
+    this.tab = this.tabs.querySelectorAll('.tab');
+    this.contentView = ele.querySelector('.content');
+    this.content = this.contentView.querySelectorAll('.page');
+    this.activeIndex = activeIndex;
+    this.init();
+  }
+  init() {
+    this.tabs.addEventListener('click', this.handleClick.bind(this));
+  }
+  handleClick(e) {
+      this.switchTab(e.target.dataset.index);
+  }
+  _handleClass(dom) {
+    const reg = /(\s*)slide-.+?(\s|$)/g;
+
+    return dom.replace(reg, '');
+  }
+  switchTab(i) {
+    if (i === this.activeIndex) return;
+
+    if (Tab.isClick) return;
+  
+    this.tab[this.activeIndex].classList.remove('active');
+    this.tab[i].classList.add('active');
+    if (i > this.activeIndex) {
+      this.content[this.activeIndex].classList.add('slide-leave-left');
+      this.content[i].classList.add('slide-enter-right');
+      this.content[i].style.display = 'block';
+    } else {
+      this.content[this.activeIndex].classList.add('slide-leave-right');
+      this.content[i].classList.add('slide-enter-left');
+      this.content[i].style.display = 'block';
+    }
+    setTimeout(() => {
+      let currentClassName = this.content[this.activeIndex].className;
+      let nextClassName = this.content[i].className;
+      this.content[this.activeIndex].className = this._handleClass(currentClassName);
+      this.content[i].className = this._handleClass(nextClassName);
+      this.content[this.activeIndex].style.display = 'none';
+      Tab.isClick = true;
+      this.activeIndex = i;
+    }, 400)
+  }
+}
+
+const $main = document.querySelector('.main');
+const tab = new Tab($main)
+
 function stackFactory() {
   return new RouterStack();
 }
@@ -55,39 +106,39 @@ $(function() {
   let flag = true;
   const cachePage = [0];
   const $main = $('.main');
-  handleStacks(pageStacks, pageTemplate, 'html', currentIndex); // 添加首页入栈
-  $footer.before(pageStacks.peek());
-  $footer.on('click', '.tab', function() {
-    const index = $(this).index();
-    const currentele = joinClassName('page', currentIndex);
-    if (currentIndex === index) return;
-    if (!flag) return;
-    flag = false;
-    $('.tab').eq(currentIndex).removeClass('active');
-    $('.tab').eq(index).addClass('active');
-    removeClass(currentele);
-    if (!cachePage.includes(index)) {
-      cachePage.push(index);
-      handleStacks(pageStacks, pageTemplate, 'html', index);
-      $footer.before(pageStacks.peek());
-    }
-    const switchele = joinClassName('page', index);
-    
-    switchele.css('display', 'block');
-    if (index > currentIndex) {
-      addClass(currentele, 'slide-leave-left');
-      addClass(switchele, 'slide-enter-right');
-    } else {
-      addClass(currentele, 'slide-leave-right');
-      addClass(switchele, 'slide-enter-left');
-    }
-    setTimeout(() => {
-      currentele.css('display', 'none');
-      removeClass(currentele, switchele);
-      currentIndex = index;
-      flag = true;
-    }, 400);
-  })
+  // handleStacks(pageStacks, pageTemplate, 'html', currentIndex); // 添加首页入栈
+  // $footer.before(pageStacks.peek());
+  // $footer.on('click', '.tab', function() {
+  //   const index = $(this).index();
+  //   const currentele = joinClassName('page', currentIndex);
+  //   if (currentIndex === index) return;
+  //   if (!flag) return;
+  //   flag = false;
+  //   $('.tab').eq(currentIndex).removeClass('active');
+  //   $('.tab').eq(index).addClass('active');
+  //   removeClass(currentele);
+  //   if (!cachePage.includes(index)) {
+  //     cachePage.push(index);
+  //     handleStacks(pageStacks, pageTemplate, 'html', index);
+  //     $footer.before(pageStacks.peek());
+  //   }
+  //   const switchele = joinClassName('page', index);
+
+  //   switchele.css('display', 'block');
+  //   if (index > currentIndex) {
+  //     addClass(currentele, 'slide-leave-left');
+  //     addClass(switchele, 'slide-enter-right');
+  //   } else {
+  //     addClass(currentele, 'slide-leave-right');
+  //     addClass(switchele, 'slide-enter-left');
+  //   }
+  //   setTimeout(() => {
+  //     currentele.css('display', 'none');
+  //     removeClass(currentele, switchele);
+  //     currentIndex = index;
+  //     flag = true;
+  //   }, 400);
+  // })
 
   $('.router').on('click', '.list', function() {
     const index = childStacks.length + 1;

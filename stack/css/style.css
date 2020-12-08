@@ -361,7 +361,6 @@ body {
 .app .footer .tabs {
   display: flex;
   width: 100%;
-  padding: 7px 0;
   font-size: 12px;
 }
 .app .footer .tabs .tab {
@@ -369,6 +368,7 @@ body {
   align-items: center;
   flex-direction: column;
   flex: 1;
+  padding: 7px 0;
   color: #262626;
   cursor: pointer;
 }
@@ -395,6 +395,7 @@ body {
   display: block;
   width: 24px;
   height: 24px;
+  pointer-events: none;
 }
 .app .footer .tabs .tab .icon.icon-wx {
   background: url(../images/wx-icon.png) no-repeat;
@@ -415,6 +416,7 @@ body {
 .app .footer .tabs .tab .text {
   display: block;
   margin-top: 3px;
+  pointer-events: none;
 }
 .app .chat-page {
   width: 100%;
