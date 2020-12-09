@@ -58,6 +58,7 @@ class Tab{
     this.init();
   }
   init() {
+    this.tab[this.activeIndex].classList.add('active');
     this.tabs.addEventListener('click', this.handleClick.bind(this));
   }
   handleClick(e) {
@@ -72,7 +73,7 @@ class Tab{
     if (i === this.activeIndex) return;
 
     if (!Tab.isClick) return;
-    Tab.isClick = false; // 控制电机
+    Tab.isClick = false; // 控制点击
     this.tab[this.activeIndex].classList.remove('active');
     this.tab[i].classList.add('active');
     // 判断进入和离开方向
