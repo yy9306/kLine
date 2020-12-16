@@ -1,0 +1,674 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+#root{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background: #f5f5f5;
+}
+ .main {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+ .page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+ .page .top-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+ .page .top-area .total {
+  line-height: 16px;
+  font-size: 16px;
+  font-weight: 500;
+}
+ .page .top-area .actions .icons {
+  display: flex;
+  align-items: center;
+}
+ .page .top-area .actions .icons .icon {
+  width: 16px;
+  height: 16px;
+}
+ .page .top-area .actions .icons .icon.icon-search {
+  background: url(../images/search-icon.png) no-repeat;
+  background-size: 16px 16px;
+}
+ .page .top-area .actions .icons .icon.icon-add {
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  background: url(../images/add-icon.png) no-repeat;
+  background-size: 14px 14px;
+}
+ .home-page .list-view {
+  padding: 50px 0;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
+  background: #f5f5f5;
+}
+ .home-page .list-view .lists .list {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+ .home-page .list-view .lists .list .avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 6px;
+  background: red;
+}
+ .home-page .list-view .lists .list .context {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  height: 40px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #000;
+  border-bottom: 1px solid #f5f5f5;
+}
+ .home-page .list-view .lists .list .context .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 15px;
+  margin-bottom: 8px;
+}
+ .home-page .list-view .lists .list .context .top .name {
+  line-height: 14px;
+  font-size: 14px;
+  color: #000;
+}
+ .home-page .list-view .lists .list .context .top .date {
+  font-size: 10px;
+  color: #999;
+}
+ .home-page .list-view .lists .list .context .information {
+  font-size: 12px;
+  color: #999;
+}
+ .home-page .list-view .lists .list:last-child .context {
+  border-bottom: none;
+}
+ .link-page .listView {
+  padding: 50px 0;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
+  background: #f5f5f5;
+}
+ .link-page .listView .session {
+  background: #fff;
+}
+ .link-page .listView .session .headline {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  padding-left: 15px;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #666;
+  background: #f5f5f5;
+}
+ .link-page .listView .session .lists .list {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+ .link-page .listView .session .lists .list .avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 6px;
+  background: red;
+}
+ .link-page .listView .session .lists .list .context {
+  flex: 1;
+  line-height: 40px;
+  height: 40px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #000;
+  border-bottom: 1px solid #f5f5f5;
+}
+ .link-page .listView .session .lists .list:last-child .context {
+  border-bottom: none;
+}
+ .find-page .listView {
+  padding: 50px 0;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
+  background: #f5f5f5;
+}
+ .find-page .listView .session {
+  background: #fff;
+}
+ .find-page .listView .session .split-line {
+  width: 100%;
+  height: 5px;
+  background: #f5f5f5;
+}
+ .find-page .listView .session .lists .list {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+ .find-page .listView .session .lists .list .avatar {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background: red;
+}
+ .find-page .listView .session .lists .list .context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  line-height: 30px;
+  height: 30px;
+  padding: 10px 15px 10px 0;
+  font-size: 14px;
+  color: #000;
+  border-bottom: 1px solid #f5f5f5;
+}
+ .find-page .listView .session .lists .list .context .arrow-icon {
+  width: 6px;
+  height: 10px;
+  background: url(../images/right-arrow.png) no-repeat;
+  background-size: 6px 10px;
+}
+ .find-page .listView .session .lists .list:last-child .context {
+  border-bottom: none;
+}
+ .me-page .top-areas {
+  position: relative;
+  padding: 50px 15px 20px 15px;
+  background: #fff;
+}
+ .me-page .top-areas .icon-camera {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(../images/camera-icon.png) no-repeat;
+  background-size: 20px 20px;
+}
+ .me-page .top-areas .personal-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ .me-page .top-areas .personal-wrapper .avatar {
+  flex: 0 0 60px;
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+ .me-page .top-areas .personal-wrapper .context {
+  flex: 1;
+}
+ .me-page .top-areas .personal-wrapper .context .nick-name {
+  line-height: 18px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #000;
+  font-weight: 500;
+}
+ .me-page .top-areas .personal-wrapper .context .person-wx-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+  .me-page
+  .top-areas
+  .personal-wrapper
+  .context
+  .person-wx-info
+  .code-img-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+  .me-page
+  .top-areas
+  .personal-wrapper
+  .context
+  .person-wx-info
+  .code-img-wrapper
+  .code-img {
+  width: 12px;
+  height: 12px;
+  margin-right: 15px;
+}
+
+  .me-page
+  .top-areas
+  .personal-wrapper
+  .context
+  .person-wx-info
+  .code-img-wrapper
+  .icon-arrow {
+  display: inline-block;
+  width: 6px;
+  height: 10px;
+  background: url(../images/right-arrow.png) no-repeat;
+  background-size: 6px 10px;
+}
+ .me-page .listView {
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: auto;
+  background: #f5f5f5;
+}
+ .me-page .listView .session {
+  background: #fff;
+}
+ .me-page .listView .session .split-line {
+  width: 100%;
+  height: 10px;
+  background: #f5f5f5;
+}
+ .me-page .listView .session .lists .list {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+ .me-page .listView .session .lists .list .avatar {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background: red;
+}
+ .me-page .listView .session .lists .list .context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  line-height: 30px;
+  height: 30px;
+  padding: 10px 15px 10px 0;
+  font-size: 14px;
+  color: #000;
+  border-bottom: 1px solid #f5f5f5;
+}
+ .me-page .listView .session .lists .list .context .arrow-icon {
+  width: 6px;
+  height: 10px;
+  background: url(../images/right-arrow.png) no-repeat;
+  background-size: 6px 10px;
+}
+ .me-page .listView .session .lists .list:last-child .context {
+  border-bottom: none;
+}
+ .footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  height: 50px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+ .footer .tabs {
+  display: flex;
+  width: 100%;
+  font-size: 12px;
+}
+ .footer .tabs .tab {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+  padding: 7px 0;
+  color: #262626;
+  cursor: pointer;
+}
+ .footer .tabs .tab.active .icon.icon-wx {
+  background: url(../images/wx-icon-active.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab.active .icon.icon-book {
+  background: url(../images/book-icon-active.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab.active .icon.icon-find {
+  background: url(../images/find-icon-active.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab.active .icon.icon-me {
+  background: url(../images/me-icon-active.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab.active .text {
+  color: #20bf64;
+}
+ .footer .tabs .tab .icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+ .footer .tabs .tab .icon.icon-wx {
+  background: url(../images/wx-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab .icon.icon-book {
+  background: url(../images/book-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab .icon.icon-find {
+  background: url(../images/find-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab .icon.icon-me {
+  background: url(../images/me-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .footer .tabs .tab .text {
+  display: block;
+  margin-top: 3px;
+  pointer-events: none;
+}
+ .chat-page {
+  width: 100%;
+}
+ .chat-page .top-areas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background: #fff;
+}
+ .chat-page .top-areas .leading {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+ .chat-page .top-areas .leading .icon-back {
+  display: inline-block;
+  width: 9px;
+  height: 15px;
+  margin-right: 10px;
+  background: url(../images/right-arrow.png) no-repeat;
+  background-size: 9px 15px;
+  transform: rotate(180deg);
+}
+ .chat-page .top-areas .actions {
+  font-size: 20px;
+  font-weight: 500;
+}
+ .chat-page .listView {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 50px;
+  width: 100%;
+  overflow-y: auto;
+}
+ .chat-page .listView .lists {
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px;
+  box-sizing: border-box;
+}
+ .chat-page .listView .lists .list {
+  display: flex;
+  align-items: center;
+}
+ .chat-page .listView .lists .list .avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  border-radius: 6px;
+}
+ .chat-page .listView .lists .list .context {
+  position: relative;
+  font-size: 14px;
+  color: #333;
+}
+ .chat-page .listView .lists .list .context .send-message {
+  display: block;
+  height: 40px;
+  line-height: 30px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 4px;
+}
+ .chat-page .listView .lists .list .context::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 15px;
+  transform: rotate(180deg);
+  border-left: 5px solid #fff;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+ .chat-page .chat-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background: #f5f5f5;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+ .chat-page .chat-footer .icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+ .chat-page .chat-footer .icon.icon-voice {
+  background: url(../images/voice-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .chat-page .chat-footer .icon.icon-smile {
+  background: url(../images/smile-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .chat-page .chat-footer .icon.icon-add {
+  margin-left: 10px;
+  background: url(../images/add-icon.png) no-repeat;
+  background-size: 100% 100%;
+}
+ .chat-page .chat-footer .input-wrapper {
+  flex: 1;
+  height: 30px;
+  margin: 0 10px;
+}
+ .chat-page .chat-footer .input-wrapper input {
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+.home-page.slide-enter-right,
+.link-page.page.slide-enter-right,
+.find-page.slide-enter-right,
+.me-page.slide-enter-right,
+.chat-page.slide-enter-right {
+  animation: formEnterRight 0.4s;
+  animation-fill-mode: forwards;
+}
+
+.main.slide-enter-left,
+.home-page.slide-enter-left,
+.link-page.slide-enter-left,
+.find-page.slide-enter-left,
+.me-page.slide-enter-left {
+  animation: formEnterLeft 0.4s;
+  animation-fill-mode: forwards;
+}
+
+.home-page.slide-leave-right,
+.link-page.slide-leave-right,
+.find-page.slide-leave-right,
+.me-page.slide-leave-right,
+.chat-page.slide-leave-right {
+  animation: fromleaveRight 0.4s;
+  animation-fill-mode: forwards;
+}
+
+.main.slide-leave-left,
+.home-page.slide-leave-left,
+.link-page.slide-leave-left,
+.find-page.slide-leave-left,
+.me-page.slide-leave-left {
+  animation: fromleaveLeft 0.4s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes formEnterRight {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes formEnterLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fromleaveLeft {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes fromleaveRight {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
