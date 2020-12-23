@@ -1,14 +1,14 @@
 class Tab{
-  public tabs: HTMLDivElement
-  public tab: Array<HTMLDivElement>
-  public contentView: any
-  public content: any
+  public tabs: HTMLElement
+  public tab: NodeListOf<HTMLElement>
+  public contentView: HTMLElement
+  public content: NodeListOf<HTMLElement>
   public activeIndex: number
   static isClick: Boolean = true;
-  constructor(ele: any, activeIndex = 0) {
-    this.tabs = ele.querySelector('.tabs-wrapper');
+  constructor(ele: HTMLElement, activeIndex = 0) {
+    this.tabs = ele.querySelector('.tabs-wrapper') as HTMLElement;
     this.tab = this.tabs.querySelectorAll('.tab');
-    this.contentView = ele.querySelector('.content');
+    this.contentView = ele.querySelector('.content') as HTMLElement;
     this.content = this.contentView.querySelectorAll('.page');
     this.activeIndex = activeIndex;
     this.init();
@@ -18,9 +18,9 @@ class Tab{
     this.tabs.addEventListener('click', this.handleClick.bind(this));
   }
   handleClick(e: any) {
-      this.switchTab(e.target.dataset.index);
+    this.switchTab(e.target.dataset.index);
   }
-  _handleClass(dom: any) {
+  _handleClass(dom: string): string {
     const reg = /(\s*)slide-.+?(\s|$)/g;
 
     return dom.replace(reg, '');
@@ -43,8 +43,8 @@ class Tab{
       this.content[i].style.display = 'block';
     }
     setTimeout(() => {
-      let currentClassName = this.content[this.activeIndex].className;
-      let nextClassName = this.content[i].className;
+      let currentClassName: string = this.content[this.activeIndex].className;
+      let nextClassName: string = this.content[i].className;
       this.content[this.activeIndex].className = this._handleClass(currentClassName);
       this.content[i].className = this._handleClass(nextClassName);
       this.content[this.activeIndex].style.display = 'none';

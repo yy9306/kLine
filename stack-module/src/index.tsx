@@ -1,11 +1,13 @@
 import HomePage from './pages/homePage'
+import Tab from './component/tab'
 import './styles/index.css';
 
 const a:number = 10;
 
 const root: any = document.getElementById('root');
 
-// console.log(new HomePage().render())
 root.innerHTML = new HomePage().render();
+const $main: any = document.querySelector('.main');
+new Tab($main);
  
 export default a;
