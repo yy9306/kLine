@@ -37,7 +37,19 @@ class Stack{
   }
 }
 
-export default Stack;
+function createStack(constructor: any) {
+  let instance: any = null
+  return function() {
+    if (!instance) {
+      instance = new constructor()
+    }
+    return instance;
+  }
+}
+
+let stack = createStack(Stack);
+
+export default stack;
 
 
 

@@ -69,9 +69,17 @@ class Tab{
 
     return dom.replace(reg, '');
   }
+  _handanimationend(i) {
+      let currentClassName = this.content[this.activeIndex].className;
+      let nextClassName = this.content[i].className;
+      this.content[this.activeIndex].className = this._handleClass(currentClassName);
+      this.content[i].className = this._handleClass(nextClassName);
+      this.content[this.activeIndex].style.display = 'none';
+      Tab.isClick = true;
+      this.activeIndex = i;
+  }
   switchTab(i) {
     if (i === this.activeIndex) return;
-
     if (!Tab.isClick) return;
     Tab.isClick = false; // 控制点击
     this.tab[this.activeIndex].classList.remove('active');
@@ -80,21 +88,27 @@ class Tab{
     if (i > this.activeIndex) {
       this.content[this.activeIndex].classList.add('slide-leave-left');
       this.content[i].classList.add('slide-enter-right');
+      this.content[i].addEventListener('transitionend', () => {
+        console.log('retre')
+      })
       this.content[i].style.display = 'block';
     } else {
       this.content[this.activeIndex].classList.add('slide-leave-right');
       this.content[i].classList.add('slide-enter-left');
       this.content[i].style.display = 'block';
     }
-    setTimeout(() => {
-      let currentClassName = this.content[this.activeIndex].className;
-      let nextClassName = this.content[i].className;
-      this.content[this.activeIndex].className = this._handleClass(currentClassName);
-      this.content[i].className = this._handleClass(nextClassName);
-      this.content[this.activeIndex].style.display = 'none';
-      Tab.isClick = true;
-      this.activeIndex = i;
-    }, 400)
+
+    this.content[i].addEventListener('animationend', this._handanimationend(i))
+    this.content[i].removeEventListener('animationend', this._handanimationend )
+    // handanimationend() => {
+    //   let currentClassName = this.content[this.activeIndex].className;
+    //   let nextClassName = this.content[i].className;
+    //   this.content[this.activeIndex].className = this._handleClass(currentClassName);
+    //   this.content[i].className = this._handleClass(nextClassName);
+    //   this.content[this.activeIndex].style.display = 'none';
+    //   Tab.isClick = true;
+    //   this.activeIndex = i;
+    // })
   }
 }
 
