@@ -32,9 +32,6 @@ class Tab{
     Tab.isClick = false; // 控制点击
     this.tab[this.activeIndex].classList.remove('active');
     this.tab[i].classList.add('active');
-    this.content[this.activeIndex].addEventListener('transitionEvent', function() {
-      console.log(3)
-    })  
     // 判断进入和离开方向
     if (i > this.activeIndex) {
       this.content[this.activeIndex].classList.add('slide-leave-left');
@@ -45,7 +42,18 @@ class Tab{
       this.content[i].classList.add('slide-enter-left');
       this.content[i].style.display = 'block';
     }
-    
+    // let _that = this;
+    // this.content[this.activeIndex].addEventListener('animationend', function(e) {
+    //   if(e.target === e.currentTarget && !Tab.isClick) {
+    //     let currentClassName: string = _that.content[_that.activeIndex].className;
+    //     let nextClassName: string = _that.content[i].className;
+    //     _that.content[_that.activeIndex].className = _that._handleClass(currentClassName);
+    //     _that.content[i].className = _that._handleClass(nextClassName);
+    //     _that.content[_that.activeIndex].style.display = 'none';
+    //     _that.activeIndex = i;
+    //     Tab.isClick = true
+    //   }
+    // });
     setTimeout(() => {
       let currentClassName: string = this.content[this.activeIndex].className;
       let nextClassName: string = this.content[i].className;

@@ -15,15 +15,12 @@ class Component{
     let childLists: NodeListOf<HTMLElement> = this.root.childNodes as NodeListOf<HTMLElement>;
     const len = childLists.length;
     const currentNode: HTMLElement = childLists[len - 1] as HTMLElement;
-    // const nextNode: HTMLElement = childLists[len - 2] as HTMLElement;
     if (childLists.length <= 0) {
       root.innerHTML = nodeStr as string 
     } else {
-      // (childLists[childLists.length - 1] as HTMLElement).style.display = "none";
       this.addClass(currentNode, 'slide-leave-left');
       currentNode.insertAdjacentHTML('afterend', nodeStr);
       currentNode.addEventListener('animationend', () => {
-        // currentNode.style.display = 'none';
       })
     }
     this.stackContainer.push(nodeStr);
@@ -39,13 +36,11 @@ class Component{
     this.removeClass(currentNode, nextNode);
     this.addClass(currentNode, 'slide-leave-right');
     this.addClass(nextNode, 'slide-enter-left');
-    nextNode.style.display = 'block';
-    setTimeout(() => {
+    // nextNode.style.display = 'block';
+    currentNode.addEventListener('animationend', () => {
       childLists[len - 1].remove();
       this.stackContainer.pop();
-      console.log(this.stackContainer)
-    }, 400)
-    // nextNode.addEventListener('animationend', _that.remove)
+    })
   }
   removeClass(...nodes: any) {  
     nodes.forEach((item: any) => {
@@ -71,7 +66,6 @@ class Component{
     })
   }
   render() {
-    alert(4)
     return ''
   }
 }
