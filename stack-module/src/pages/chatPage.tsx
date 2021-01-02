@@ -4,7 +4,7 @@ class ChatPage extends Component{
   constructor() {
     super()
   }
-  mounted() {
+  componentDidMount() {
   }
   back() {
     this.removeNode()
