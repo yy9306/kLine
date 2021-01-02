@@ -60,6 +60,7 @@ class Component{
     methods = nodeStr.match(reg) as string[];
     methods && methods.forEach(item => {
       item.replace(/.+\{(\w+).+\"([\w\_\-]+)\".+/g, function(...args: string[]) {
+        console.log(args);
         (document.querySelector(`.${args[2]}`)) &&  (document.querySelector(`.${args[2]}`) as HTMLElement).addEventListener("click", () => _that[args[1]]())
         return ''
       })
