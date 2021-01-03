@@ -100,12 +100,13 @@ class Component{
   handleMethods(nodeStr: string) {
     const _that = this;
     let methods: Array<string>;
-    const reg = /data-click=\{.+\}/g;
-    methods = nodeStr.match(reg) as string[];
+    const reg = /data-click=\{[^\}]+\}/g;
+    methods =[...new Set(nodeStr.match(reg) as string[])];
     methods && methods.forEach(item => {
       item.replace(/.+\{(\w+).+\"([\w\_\-]+)\".+/g, function(...args: string[]) {
         document.querySelectorAll(`.${args[2]}`) && document.querySelectorAll(`.${args[2]}`).forEach(item => {
-          item.addEventListener("click", () => _that[args[1]]())
+          console.log(_that)
+          item.addEventListener("click", () => _that[args[1]] && _that[args[1]]())
         })
         return ''
       })
